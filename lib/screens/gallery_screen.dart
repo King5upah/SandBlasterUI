@@ -349,7 +349,7 @@ class _Header extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'v1.0.0',
+                      'v1.1.0',
                       style: TextStyle(
                         fontSize: 12,
                         color: LiquidGlassTheme.success,
