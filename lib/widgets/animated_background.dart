@@ -17,19 +17,26 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
   late List<Animation<double>> _yAnims;
   final _rand = math.Random(42);
 
-  late List<_OrbConfig> _orbs;
+  List<_OrbConfig> get _orbs => [
+    _OrbConfig(color: context.sbTheme.orbViolet, size: 480, opacity: 0.35),
+    _OrbConfig(color: context.sbTheme.orbBlue, size: 380, opacity: 0.30),
+    _OrbConfig(color: context.sbTheme.orbCyan, size: 320, opacity: 0.25),
+    _OrbConfig(color: context.sbTheme.orbPink, size: 280, opacity: 0.20),
+    _OrbConfig(color: context.sbTheme.orbEmerald, size: 240, opacity: 0.18),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _controllers = List.generate(_orbs.length, (i) {
+    final orbCount = 5;
+    _controllers = List.generate(orbCount, (i) {
       return AnimationController(
         vsync: this,
         duration: Duration(seconds: 12 + i * 4),
       )..repeat(reverse: true);
     });
 
-    _xAnims = List.generate(_orbs.length, (i) {
+    _xAnims = List.generate(orbCount, (i) {
       final from = _rand.nextDouble();
       final to = _rand.nextDouble();
       return Tween<double>(begin: from, end: to).animate(
@@ -37,25 +44,13 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
       );
     });
 
-    _yAnims = List.generate(_orbs.length, (i) {
+    _yAnims = List.generate(orbCount, (i) {
       final from = _rand.nextDouble();
       final to = _rand.nextDouble();
       return Tween<double>(begin: from, end: to).animate(
         CurvedAnimation(parent: _controllers[i], curve: Curves.easeInOut),
       );
     });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _orbs = [
-      _OrbConfig(color: context.sbTheme.orbViolet, size: 480, opacity: 0.35),
-      _OrbConfig(color: context.sbTheme.orbBlue, size: 380, opacity: 0.30),
-      _OrbConfig(color: context.sbTheme.orbCyan, size: 320, opacity: 0.25),
-      _OrbConfig(color: context.sbTheme.orbPink, size: 280, opacity: 0.20),
-      _OrbConfig(color: context.sbTheme.orbEmerald, size: 240, opacity: 0.18),
-    ];
   }
 
   @override
