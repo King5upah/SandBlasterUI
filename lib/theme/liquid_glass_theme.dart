@@ -213,6 +213,32 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
     warning: Color(0xFFFFB3C1),
     error: Color(0xFFFFFFFF),
   );
+
+  static const latte = SandblasterThemeData(
+    bgDeep: Color(0xFFEBE3D5),
+    bgMid: Color(0xFFDED0B6),
+    bgSurface: Color(0xFFB2A59B),
+    orbBlue: Color(0xFFD2B48C),
+    orbViolet: Color(0xFFC19A6B),
+    orbCyan: Color(0xFFE8D0A9),
+    orbPink: Color(0xFFB59A7C),
+    orbEmerald: Color(0xFF8B7355),
+    glassSurface: Color(0x33FFFFFF),
+    glassElevated: Color(0x4DFFFFFF),
+    glassOverlay: Color(0x66FFFFFF),
+    glassBorder: Color(0x99FFFFFF),
+    glassHighlight: Color(0x99FFFFFF),
+    glassShadow: Color(0x153C2A21),
+    textPrimary: Color(0xFF3C2A21),
+    textSecondary: Color(0xFF604A3C),
+    textTertiary: Color(0xFF8A7769),
+    accent: Color(0xFFD0B8A8),
+    accentGlow: Color(0x40D0B8A8),
+    accentViolet: Color(0xFFAB8A72),
+    success: Color(0xFF6A994E),
+    warning: Color(0xFFD4A373),
+    error: Color(0xFFBC4749),
+  );
 }
 
 class LiquidGlassTheme {
@@ -230,6 +256,7 @@ class LiquidGlassTheme {
   static ThemeData get darkTheme => _buildTheme(Brightness.dark, SandblasterThemeData.dark);
   static ThemeData get lightTheme => _buildTheme(Brightness.light, SandblasterThemeData.light);
   static ThemeData get rubyTheme => _buildTheme(Brightness.dark, SandblasterThemeData.ruby);
+  static ThemeData get latteTheme => _buildTheme(Brightness.light, SandblasterThemeData.latte);
 
   static ThemeData _buildTheme(Brightness brightness, SandblasterThemeData ext) {
     final baseTextTheme = brightness == Brightness.dark

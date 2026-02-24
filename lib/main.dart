@@ -7,7 +7,7 @@ void main() {
   runApp(const LiquidGlassApp());
 }
 
-enum SandblasterThemeMode { dark, light, ruby }
+enum SandblasterThemeMode { dark, light, ruby, latte }
 
 class ThemeController extends ChangeNotifier {
   SandblasterThemeMode _mode = SandblasterThemeMode.dark;
@@ -63,6 +63,9 @@ class _LiquidGlassAppState extends State<LiquidGlassApp> {
               break;
             case SandblasterThemeMode.ruby:
               activeTheme = LiquidGlassTheme.rubyTheme;
+              break;
+            case SandblasterThemeMode.latte:
+              activeTheme = LiquidGlassTheme.latteTheme;
               break;
             case SandblasterThemeMode.dark:
             default:

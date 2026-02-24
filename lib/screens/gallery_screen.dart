@@ -350,7 +350,7 @@ class _Header extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'v1.2.0',
+                      'v1.3.0',
                       style: TextStyle(
                         fontSize: 12,
                         color: context.sbTheme.success,
