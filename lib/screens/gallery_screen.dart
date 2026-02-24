@@ -143,7 +143,7 @@ class _Sidebar extends StatelessWidget {
                             colors: [LiquidGlassTheme.accent, LiquidGlassTheme.accentViolet],
                           ).createShader(b),
                           child: const Text(
-                            'LiquidGlass',
+                            'Sandblaster',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
@@ -152,7 +152,7 @@ class _Sidebar extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Design System',
+                          'UI Design System',
                           style: TextStyle(
                             fontSize: 11,
                             color: LiquidGlassTheme.textTertiary,
@@ -514,7 +514,7 @@ class _SectionViewState extends State<_SectionView> {
                           colors: [Colors.white, LiquidGlassTheme.accent, LiquidGlassTheme.accentViolet],
                         ).createShader(b),
                         child: Text(
-                          'Liquid Glass',
+                          'Sandblaster',
                           style: Theme.of(context).textTheme.displayLarge?.copyWith(
                                 color: Colors.white,
                                 fontSize: 42,
@@ -522,7 +522,7 @@ class _SectionViewState extends State<_SectionView> {
                         ),
                       ),
                       Text(
-                        'Design System for Flutter Web',
+                        'UI Design System for Flutter Web',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               color: LiquidGlassTheme.textSecondary,
                             ),
@@ -533,9 +533,10 @@ class _SectionViewState extends State<_SectionView> {
               ),
               const SizedBox(height: 24),
               Text(
-                'A premium component library inspired by Apple\'s WWDC 2025 design language. '
-                'Featuring translucent materials, real-time specular highlights, lensing effects, '
-                'and fluid physics-based animations — all built natively in Flutter Web.',
+                'A premium Flutter Web component library built around glass-inspired aesthetics. '
+                'Sandblaster brings translucent surfaces, specular highlights, lensing effects, '
+                'and fluid physics-based animations natively to Flutter Web.',
+              // style inspired by Apple\'s Liquid Glass design language (WWDC 2025)
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.6),
               ),
               const SizedBox(height: 28),
@@ -587,7 +588,7 @@ class _SectionViewState extends State<_SectionView> {
         // Design principles
         _buildSection(
           'Design Principles',
-          'The foundation of Liquid Glass — clarity, depth, and deference.',
+          'The foundation of Sandblaster — clarity, depth, and deference.',
           Wrap(
             spacing: 16,
             runSpacing: 16,
@@ -721,7 +722,7 @@ class _SectionViewState extends State<_SectionView> {
             runSpacing: 16,
             children: [
               GlassCard(
-                title: 'Liquid Glass Card',
+                title: 'Sandblaster Card',
                 subtitle: 'With specular highlight',
                 leadingIcon: Icons.water_drop_rounded,
                 accentColor: LiquidGlassTheme.accent,

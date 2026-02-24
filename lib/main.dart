@@ -13,7 +13,7 @@ class LiquidGlassApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Liquid Glass — Flutter Web Design System',
+      title: 'Sandblaster — Flutter Web Design System',
       debugShowCheckedModeBanner: false,
       theme: LiquidGlassTheme.themeData,
       home: const _RootShell(),
