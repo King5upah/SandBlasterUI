@@ -23,12 +23,13 @@ Copy the following directories from this repo into your project:
 - `lib/components/` (All UI components)
 
 ### 3. Initialize the Theme
-Wrap your `MaterialApp` with the `LiquidGlassTheme`:
+Wrap your `MaterialApp` with the `LiquidGlassTheme` using the new `SandblasterThemeData` extension profiles:
 ```dart
 import 'package:your_app/theme/liquid_glass_theme.dart';
 
 MaterialApp(
-  theme: LiquidGlassTheme.themeData,
+  // Choose between darkTheme, lightTheme, rubyTheme, or latteTheme
+  theme: LiquidGlassTheme.darkTheme, 
   home: YourRootWidget(),
 )
 ```
@@ -88,6 +89,13 @@ LiquidGlassContainer(
 - **AnimatedBackground**: Smoothly moving gradient orbs using `CustomPainter` for high performance, with an optional grain texture overlay.
 - **Physics Motion**: All animations use physics-based curves for a natural, premium feel.
 - **Adaptive Color**: Components tint themselves based on the background, maintaining legibility while looking integrated.
+
+### 🛡 Web & Desktop Architecture (v1.4.0)
+Sandblaster is hardened for flexible viewport environments:
+- **Flex Layout Controls**: `GlassCard` supports `contentMaxWidth` and `contentAlignment` to prevent component stretching on ultrawide displays.
+- **GlassGalleryModal**: A safe, fullscreen modal built on `Dialog.fullscreen` and `SafeArea`, dynamically constraining `InteractiveViewer` bounds to prevent Web render crashes.
+- **Hit Test Boundaries**: All interactive components (`GlassButton`, `GlassChip`, `LiquidGlassContainer`) expose `hitTestBehavior` to prevent "ghost touches" through overlapping glass layers.
+- **Standardized APIs**: Components like `GlassToggle` map directly to standard Material naming conventions (`activeTrackColor`, `thumbIcon`, etc.) for seamless adoption.
 
 ---
 *Built with Flutter Web · 2025*
