@@ -26,7 +26,7 @@ class GlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = accentColor ?? LiquidGlassTheme.accent;
+    final color = accentColor ?? context.sbTheme.accent;
 
     return LiquidGlassContainer(
       width: width,
@@ -70,7 +70,7 @@ class GlassCard extends StatelessWidget {
                         Text(
                           subtitle!,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: LiquidGlassTheme.textTertiary,
+                                color: context.sbTheme.textTertiary,
                               ),
                         ),
                     ],

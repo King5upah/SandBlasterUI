@@ -7,6 +7,7 @@ import '../../components/glass_text_field.dart';
 import '../../components/glass_toggle_chip.dart';
 import '../../components/glass_slider_tab.dart';
 import '../../components/glass_modal_toast.dart';
+import '../../main.dart';
 import 'dart:ui';
 
 class GalleryScreen extends StatefulWidget {
@@ -102,10 +103,10 @@ class _Sidebar extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Color(0x12FFFFFF),
             border: Border(
-              right: BorderSide(color: LiquidGlassTheme.glassBorder, width: 1),
+              right: BorderSide(color: context.sbTheme.glassBorder, width: 1),
             ),
           ),
           child: Column(
@@ -120,14 +121,14 @@ class _Sidebar extends StatelessWidget {
                       height: 36,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: const LinearGradient(
-                          colors: [LiquidGlassTheme.accent, LiquidGlassTheme.accentViolet],
+                        gradient: LinearGradient(
+                          colors: [context.sbTheme.accent, context.sbTheme.accentViolet],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: LiquidGlassTheme.accent.withOpacity(0.4),
+                            color: context.sbTheme.accent.withOpacity(0.4),
                             blurRadius: 12,
                           )
                         ],
@@ -139,8 +140,8 @@ class _Sidebar extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ShaderMask(
-                          shaderCallback: (b) => const LinearGradient(
-                            colors: [LiquidGlassTheme.accent, LiquidGlassTheme.accentViolet],
+                          shaderCallback: (b) => LinearGradient(
+                            colors: [context.sbTheme.accent, context.sbTheme.accentViolet],
                           ).createShader(b),
                           child: const Text(
                             'Sandblaster',
@@ -155,7 +156,7 @@ class _Sidebar extends StatelessWidget {
                           'UI Design System',
                           style: TextStyle(
                             fontSize: 11,
-                            color: LiquidGlassTheme.textTertiary,
+                            color: context.sbTheme.textTertiary,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -164,7 +165,7 @@ class _Sidebar extends StatelessWidget {
                   ],
                 ),
               ),
-              const Divider(color: LiquidGlassTheme.glassBorder, height: 1),
+              Divider(color: context.sbTheme.glassBorder, height: 1),
               const SizedBox(height: 12),
               // Navigation items
               Expanded(
@@ -187,13 +188,13 @@ class _Sidebar extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    const Icon(Icons.flutter_dash, color: LiquidGlassTheme.accent, size: 16),
+                    Icon(Icons.flutter_dash, color: context.sbTheme.accent, size: 16),
                     const SizedBox(width: 8),
                     Text(
                       'Flutter Web · 2025',
                       style: TextStyle(
                         fontSize: 11,
-                        color: LiquidGlassTheme.textTertiary,
+                        color: context.sbTheme.textTertiary,
                       ),
                     ),
                   ],
@@ -242,13 +243,13 @@ class _SidebarItemState extends State<_SidebarItem> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusSm),
             color: widget.isSelected
-                ? LiquidGlassTheme.accent.withOpacity(0.15)
+                ? context.sbTheme.accent.withOpacity(0.15)
                 : _hovered
                     ? Colors.white.withOpacity(0.06)
                     : Colors.transparent,
             border: Border.all(
               color: widget.isSelected
-                  ? LiquidGlassTheme.accent.withOpacity(0.3)
+                  ? context.sbTheme.accent.withOpacity(0.3)
                   : Colors.transparent,
               width: 1,
             ),
@@ -259,8 +260,8 @@ class _SidebarItemState extends State<_SidebarItem> {
                 widget.icon,
                 size: 18,
                 color: widget.isSelected
-                    ? LiquidGlassTheme.accent
-                    : LiquidGlassTheme.textSecondary,
+                    ? context.sbTheme.accent
+                    : context.sbTheme.textSecondary,
               ),
               const SizedBox(width: 10),
               Text(
@@ -269,8 +270,8 @@ class _SidebarItemState extends State<_SidebarItem> {
                   fontSize: 14,
                   fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w400,
                   color: widget.isSelected
-                      ? LiquidGlassTheme.accent
-                      : LiquidGlassTheme.textSecondary,
+                      ? context.sbTheme.accent
+                      : context.sbTheme.textSecondary,
                 ),
               ),
               if (widget.isSelected) ...[
@@ -278,9 +279,9 @@ class _SidebarItemState extends State<_SidebarItem> {
                 Container(
                   width: 6,
                   height: 6,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: LiquidGlassTheme.accent,
+                    color: context.sbTheme.accent,
                   ),
                 ),
               ],
@@ -310,10 +311,10 @@ class _Header extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
         child: Container(
           height: 64,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Color(0x0FFFFFFF),
             border: Border(
-              bottom: BorderSide(color: LiquidGlassTheme.glassBorder),
+              bottom: BorderSide(color: context.sbTheme.glassBorder),
             ),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -334,17 +335,17 @@ class _Header extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: LiquidGlassTheme.success.withOpacity(0.15),
-                  border: Border.all(color: LiquidGlassTheme.success.withOpacity(0.4)),
+                  color: context.sbTheme.success.withOpacity(0.15),
+                  border: Border.all(color: context.sbTheme.success.withOpacity(0.4)),
                 ),
                 child: Row(
                   children: [
                     Container(
                       width: 7,
                       height: 7,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: LiquidGlassTheme.success,
+                        color: context.sbTheme.success,
                       ),
                     ),
                     const SizedBox(width: 6),
@@ -352,12 +353,23 @@ class _Header extends StatelessWidget {
                       'v1.1.0',
                       style: TextStyle(
                         fontSize: 12,
-                        color: LiquidGlassTheme.success,
+                        color: context.sbTheme.success,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(width: 8),
+              GlassButton(
+                icon: Icons.palette_rounded,
+                variant: GlassButtonVariant.icon,
+                accentColor: context.sbTheme.orbPink,
+                onPressed: () {
+                  final ctrl = ThemeProvider.of(context);
+                  final nextMode = SandblasterThemeMode.values[(ctrl.mode.index + 1) % SandblasterThemeMode.values.length];
+                  ctrl.setMode(nextMode);
+                },
               ),
               const SizedBox(width: 8),
               GlassButton(
@@ -368,7 +380,7 @@ class _Header extends StatelessWidget {
               GlassButton(
                 icon: Icons.star_rounded,
                 variant: GlassButtonVariant.icon,
-                accentColor: LiquidGlassTheme.warning,
+                accentColor: context.sbTheme.warning,
               ),
             ],
           ),
@@ -417,7 +429,7 @@ class _SectionViewState extends State<_SectionView> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusLg),
         color: bg ?? Colors.white.withOpacity(0.03),
-        border: Border.all(color: LiquidGlassTheme.glassBorder),
+        border: Border.all(color: context.sbTheme.glassBorder),
       ),
       child: child,
     );
@@ -491,14 +503,14 @@ class _SectionViewState extends State<_SectionView> {
                     height: 56,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: const LinearGradient(
-                        colors: [LiquidGlassTheme.accent, LiquidGlassTheme.accentViolet],
+                      gradient: LinearGradient(
+                        colors: [context.sbTheme.accent, context.sbTheme.accentViolet],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: LiquidGlassTheme.accent.withOpacity(0.5),
+                          color: context.sbTheme.accent.withOpacity(0.5),
                           blurRadius: 20,
                         )
                       ],
@@ -510,8 +522,8 @@ class _SectionViewState extends State<_SectionView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ShaderMask(
-                        shaderCallback: (b) => const LinearGradient(
-                          colors: [Colors.white, LiquidGlassTheme.accent, LiquidGlassTheme.accentViolet],
+                        shaderCallback: (b) => LinearGradient(
+                          colors: [Colors.white, context.sbTheme.accent, context.sbTheme.accentViolet],
                         ).createShader(b),
                         child: Text(
                           'Sandblaster',
@@ -524,7 +536,7 @@ class _SectionViewState extends State<_SectionView> {
                       Text(
                         'UI Design System for Flutter Web',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: LiquidGlassTheme.textSecondary,
+                              color: context.sbTheme.textSecondary,
                             ),
                       ),
                     ],
@@ -544,11 +556,11 @@ class _SectionViewState extends State<_SectionView> {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  GlassChip(label: 'BackdropFilter', icon: Icons.blur_on_rounded, color: LiquidGlassTheme.accent),
-                  GlassChip(label: 'Specular Highlights', icon: Icons.light_mode_rounded, color: LiquidGlassTheme.accentViolet),
-                  GlassChip(label: 'Physics Motion', icon: Icons.animation_rounded, color: LiquidGlassTheme.orbCyan),
-                  GlassChip(label: 'Adaptive Color', icon: Icons.palette_rounded, color: LiquidGlassTheme.orbPink),
-                  GlassChip(label: 'Flutter Web', icon: Icons.flutter_dash, color: LiquidGlassTheme.orbEmerald),
+                  GlassChip(label: 'BackdropFilter', icon: Icons.blur_on_rounded, color: context.sbTheme.accent),
+                  GlassChip(label: 'Specular Highlights', icon: Icons.light_mode_rounded, color: context.sbTheme.accentViolet),
+                  GlassChip(label: 'Physics Motion', icon: Icons.animation_rounded, color: context.sbTheme.orbCyan),
+                  GlassChip(label: 'Adaptive Color', icon: Icons.palette_rounded, color: context.sbTheme.orbPink),
+                  GlassChip(label: 'Flutter Web', icon: Icons.flutter_dash, color: context.sbTheme.orbEmerald),
                 ],
               ),
               const SizedBox(height: 28),
@@ -557,14 +569,14 @@ class _SectionViewState extends State<_SectionView> {
                   GlassButton(
                     label: 'Explore Components',
                     icon: Icons.explore_rounded,
-                    accentColor: LiquidGlassTheme.accent,
+                    accentColor: context.sbTheme.accent,
                   ),
                   const SizedBox(width: 12),
                   GlassButton(
                     label: 'View Source',
                     icon: Icons.code_rounded,
                     variant: GlassButtonVariant.ghost,
-                    accentColor: LiquidGlassTheme.textSecondary,
+                    accentColor: context.sbTheme.textSecondary,
                   ),
                 ],
               ),
@@ -575,13 +587,13 @@ class _SectionViewState extends State<_SectionView> {
         // Stats
         Row(
           children: [
-            Expanded(child: _StatCard(label: 'Components', value: '12+', icon: Icons.widgets_rounded, color: LiquidGlassTheme.accent)),
+            Expanded(child: _StatCard(label: 'Components', value: '12+', icon: Icons.widgets_rounded, color: context.sbTheme.accent)),
             const SizedBox(width: 16),
-            Expanded(child: _StatCard(label: 'Animations', value: '∞', icon: Icons.animation_rounded, color: LiquidGlassTheme.accentViolet)),
+            Expanded(child: _StatCard(label: 'Animations', value: '∞', icon: Icons.animation_rounded, color: context.sbTheme.accentViolet)),
             const SizedBox(width: 16),
-            Expanded(child: _StatCard(label: 'Glass Layers', value: '3', icon: Icons.layers_rounded, color: LiquidGlassTheme.orbCyan)),
+            Expanded(child: _StatCard(label: 'Glass Layers', value: '3', icon: Icons.layers_rounded, color: context.sbTheme.orbCyan)),
             const SizedBox(width: 16),
-            Expanded(child: _StatCard(label: 'Blur Levels', value: '3', icon: Icons.blur_on_rounded, color: LiquidGlassTheme.orbPink)),
+            Expanded(child: _StatCard(label: 'Blur Levels', value: '3', icon: Icons.blur_on_rounded, color: context.sbTheme.orbPink)),
           ],
         ),
         const SizedBox(height: 32),
@@ -597,25 +609,25 @@ class _SectionViewState extends State<_SectionView> {
                 icon: Icons.water_rounded,
                 label: 'Translucency',
                 desc: 'Dynamic frosted glass surfaces that reveal context beneath',
-                color: LiquidGlassTheme.accent,
+                color: context.sbTheme.accent,
               ),
               _PrincipleCard(
                 icon: Icons.highlight_rounded,
                 label: 'Specular Light',
                 desc: 'Real-time light reflections that respond to interaction',
-                color: LiquidGlassTheme.accentViolet,
+                color: context.sbTheme.accentViolet,
               ),
               _PrincipleCard(
                 icon: Icons.animation_rounded,
                 label: 'Fluid Motion',
                 desc: 'Physics-based animations with Apple-inspired easing curves',
-                color: LiquidGlassTheme.orbCyan,
+                color: context.sbTheme.orbCyan,
               ),
               _PrincipleCard(
                 icon: Icons.palette_rounded,
                 label: 'Adaptive Color',
                 desc: 'Components intelligently adapt to their surroundings',
-                color: LiquidGlassTheme.orbPink,
+                color: context.sbTheme.orbPink,
               ),
             ],
           ),
@@ -640,27 +652,27 @@ class _SectionViewState extends State<_SectionView> {
                 GlassButton(
                   label: 'Primary',
                   icon: Icons.star_rounded,
-                  accentColor: LiquidGlassTheme.accent,
+                  accentColor: context.sbTheme.accent,
                 ),
                 GlassButton(
                   label: 'Violet',
                   icon: Icons.auto_awesome_rounded,
-                  accentColor: LiquidGlassTheme.accentViolet,
+                  accentColor: context.sbTheme.accentViolet,
                 ),
                 GlassButton(
                   label: 'Success',
                   icon: Icons.check_rounded,
-                  accentColor: LiquidGlassTheme.success,
+                  accentColor: context.sbTheme.success,
                 ),
                 GlassButton(
                   label: 'Warning',
                   icon: Icons.warning_amber_rounded,
-                  accentColor: LiquidGlassTheme.warning,
+                  accentColor: context.sbTheme.warning,
                 ),
                 GlassButton(
                   label: 'Danger',
                   icon: Icons.delete_rounded,
-                  accentColor: LiquidGlassTheme.error,
+                  accentColor: context.sbTheme.error,
                 ),
               ],
             ),
@@ -675,32 +687,32 @@ class _SectionViewState extends State<_SectionView> {
                 GlassButton(
                   label: 'Ghost',
                   variant: GlassButtonVariant.ghost,
-                  accentColor: LiquidGlassTheme.accent,
+                  accentColor: context.sbTheme.accent,
                 ),
                 GlassButton(
                   label: 'Ghost Violet',
                   variant: GlassButtonVariant.ghost,
-                  accentColor: LiquidGlassTheme.accentViolet,
+                  accentColor: context.sbTheme.accentViolet,
                 ),
                 GlassButton(
                   icon: Icons.favorite_rounded,
                   variant: GlassButtonVariant.icon,
-                  accentColor: LiquidGlassTheme.error,
+                  accentColor: context.sbTheme.error,
                 ),
                 GlassButton(
                   icon: Icons.share_rounded,
                   variant: GlassButtonVariant.icon,
-                  accentColor: LiquidGlassTheme.accent,
+                  accentColor: context.sbTheme.accent,
                 ),
                 GlassButton(
                   icon: Icons.bookmark_rounded,
                   variant: GlassButtonVariant.icon,
-                  accentColor: LiquidGlassTheme.warning,
+                  accentColor: context.sbTheme.warning,
                 ),
                 GlassButton(
                   label: 'Loading...',
                   loading: true,
-                  accentColor: LiquidGlassTheme.orbCyan,
+                  accentColor: context.sbTheme.orbCyan,
                 ),
               ],
             ),
@@ -725,7 +737,7 @@ class _SectionViewState extends State<_SectionView> {
                 title: 'Sandblaster Card',
                 subtitle: 'With specular highlight',
                 leadingIcon: Icons.water_drop_rounded,
-                accentColor: LiquidGlassTheme.accent,
+                accentColor: context.sbTheme.accent,
                 width: 300,
                 child: Text(
                   'A frosted glass surface with real-time backdrop blur and '
@@ -737,14 +749,14 @@ class _SectionViewState extends State<_SectionView> {
                 title: 'Stats Overview',
                 subtitle: 'System metrics',
                 leadingIcon: Icons.insights_rounded,
-                accentColor: LiquidGlassTheme.orbCyan,
+                accentColor: context.sbTheme.orbCyan,
                 width: 300,
-                trailing: GlassChip(label: 'Live', color: LiquidGlassTheme.success),
+                trailing: GlassChip(label: 'Live', color: context.sbTheme.success),
                 child: Column(
                   children: [
-                    _MetricRow(label: 'FPS', value: '60', color: LiquidGlassTheme.success),
-                    _MetricRow(label: 'Blur Sigma', value: '20px', color: LiquidGlassTheme.accent),
-                    _MetricRow(label: 'Opacity', value: '18%', color: LiquidGlassTheme.accentViolet),
+                    _MetricRow(label: 'FPS', value: '60', color: context.sbTheme.success),
+                    _MetricRow(label: 'Blur Sigma', value: '20px', color: context.sbTheme.accent),
+                    _MetricRow(label: 'Opacity', value: '18%', color: context.sbTheme.accentViolet),
                   ],
                 ),
               ),
@@ -752,7 +764,7 @@ class _SectionViewState extends State<_SectionView> {
                 title: 'Notification',
                 subtitle: 'Glass surface elevated',
                 leadingIcon: Icons.notifications_rounded,
-                accentColor: LiquidGlassTheme.accentViolet,
+                accentColor: context.sbTheme.accentViolet,
                 width: 300,
                 onTap: () {},
                 child: Row(
@@ -763,7 +775,7 @@ class _SectionViewState extends State<_SectionView> {
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),
-                    const Icon(Icons.chevron_right_rounded, color: LiquidGlassTheme.textTertiary),
+                    Icon(Icons.chevron_right_rounded, color: context.sbTheme.textTertiary),
                   ],
                 ),
               ),
@@ -771,13 +783,13 @@ class _SectionViewState extends State<_SectionView> {
                 title: 'Interactive Card',
                 subtitle: 'Hover to lift',
                 leadingIcon: Icons.touch_app_rounded,
-                accentColor: LiquidGlassTheme.orbPink,
+                accentColor: context.sbTheme.orbPink,
                 width: 300,
                 onTap: () => GlassToast.show(
                   context,
                   message: 'Card tapped!',
                   icon: Icons.touch_app_rounded,
-                  color: LiquidGlassTheme.orbPink,
+                  color: context.sbTheme.orbPink,
                 ),
                 child: Text(
                   'This card is interactive. Hover for a lift effect, tap to trigger a toast.',
@@ -854,14 +866,14 @@ class _SectionViewState extends State<_SectionView> {
                   label: 'Dark Mode',
                   value: _toggle2,
                   onChanged: (v) => setState(() => _toggle2 = v),
-                  color: LiquidGlassTheme.accentViolet,
+                  color: context.sbTheme.accentViolet,
                 ),
                 const SizedBox(height: 12),
                 _ToggleRow(
                   label: 'Haptic Feedback',
                   value: _toggle3,
                   onChanged: (v) => setState(() => _toggle3 = v),
-                  color: LiquidGlassTheme.orbCyan,
+                  color: context.sbTheme.orbCyan,
                 ),
               ],
             ),
@@ -877,13 +889,13 @@ class _SectionViewState extends State<_SectionView> {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    GlassChip(label: 'Active', color: LiquidGlassTheme.success, icon: Icons.circle),
-                    GlassChip(label: 'Pending', color: LiquidGlassTheme.warning, icon: Icons.hourglass_empty_rounded),
-                    GlassChip(label: 'Error', color: LiquidGlassTheme.error, icon: Icons.error_rounded),
-                    GlassChip(label: 'Flutter', color: LiquidGlassTheme.accent, icon: Icons.flutter_dash),
-                    GlassChip(label: 'Design', color: LiquidGlassTheme.accentViolet, icon: Icons.design_services_rounded),
-                    GlassChip(label: 'Outlined', outlined: true, color: LiquidGlassTheme.orbCyan),
-                    GlassChip(label: 'Outlined', outlined: true, color: LiquidGlassTheme.orbPink),
+                    GlassChip(label: 'Active', color: context.sbTheme.success, icon: Icons.circle),
+                    GlassChip(label: 'Pending', color: context.sbTheme.warning, icon: Icons.hourglass_empty_rounded),
+                    GlassChip(label: 'Error', color: context.sbTheme.error, icon: Icons.error_rounded),
+                    GlassChip(label: 'Flutter', color: context.sbTheme.accent, icon: Icons.flutter_dash),
+                    GlassChip(label: 'Design', color: context.sbTheme.accentViolet, icon: Icons.design_services_rounded),
+                    GlassChip(label: 'Outlined', outlined: true, color: context.sbTheme.orbCyan),
+                    GlassChip(label: 'Outlined', outlined: true, color: context.sbTheme.orbPink),
                     GlassChip(label: 'Glass', outlined: true, color: Colors.white),
                   ],
                 ),
@@ -912,7 +924,7 @@ class _SectionViewState extends State<_SectionView> {
                   label: 'Volume',
                   icon: Icons.volume_up_rounded,
                   value: _sliderVal,
-                  color: LiquidGlassTheme.accent,
+                  color: context.sbTheme.accent,
                   onChanged: (v) => setState(() => _sliderVal = v),
                 ),
                 const SizedBox(height: 16),
@@ -920,7 +932,7 @@ class _SectionViewState extends State<_SectionView> {
                   label: 'Blur Intensity',
                   icon: Icons.blur_on_rounded,
                   value: _sliderVal2,
-                  color: LiquidGlassTheme.accentViolet,
+                  color: context.sbTheme.accentViolet,
                   onChanged: (v) => setState(() => _sliderVal2 = v),
                 ),
               ],
@@ -947,7 +959,7 @@ class _SectionViewState extends State<_SectionView> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusMd),
                       color: Colors.white.withOpacity(0.04),
-                      border: Border.all(color: LiquidGlassTheme.glassBorder),
+                      border: Border.all(color: context.sbTheme.glassBorder),
                     ),
                     child: Text(
                       _tabContent[_tabIndex],
@@ -998,7 +1010,7 @@ class _SectionViewState extends State<_SectionView> {
                     GlassButton(
                       label: 'Open Modal',
                       icon: Icons.open_in_new_rounded,
-                      accentColor: LiquidGlassTheme.accent,
+                      accentColor: context.sbTheme.accent,
                       onPressed: () => GlassModal.show(
                         context,
                         title: 'Liquid Glass Modal',
@@ -1008,15 +1020,15 @@ class _SectionViewState extends State<_SectionView> {
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.6),
                         ),
                         actions: [
-                          (label: 'Cancel', color: LiquidGlassTheme.textSecondary, onTap: () => Navigator.pop(context)),
-                          (label: 'Confirm', color: LiquidGlassTheme.accent, onTap: () => Navigator.pop(context)),
+                          (label: 'Cancel', color: context.sbTheme.textSecondary, onTap: () => Navigator.pop(context)),
+                          (label: 'Confirm', color: context.sbTheme.accent, onTap: () => Navigator.pop(context)),
                         ],
                       ),
                     ),
                     GlassButton(
                       label: 'Delete Modal',
                       icon: Icons.delete_rounded,
-                      accentColor: LiquidGlassTheme.error,
+                      accentColor: context.sbTheme.error,
                       onPressed: () => GlassModal.show(
                         context,
                         title: 'Delete Component?',
@@ -1025,8 +1037,8 @@ class _SectionViewState extends State<_SectionView> {
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.6),
                         ),
                         actions: [
-                          (label: 'Cancel', color: LiquidGlassTheme.textSecondary, onTap: () => Navigator.pop(context)),
-                          (label: 'Delete', color: LiquidGlassTheme.error, onTap: () => Navigator.pop(context)),
+                          (label: 'Cancel', color: context.sbTheme.textSecondary, onTap: () => Navigator.pop(context)),
+                          (label: 'Delete', color: context.sbTheme.error, onTap: () => Navigator.pop(context)),
                         ],
                       ),
                     ),
@@ -1049,45 +1061,45 @@ class _SectionViewState extends State<_SectionView> {
                     GlassButton(
                       label: 'Success',
                       icon: Icons.check_circle_rounded,
-                      accentColor: LiquidGlassTheme.success,
+                      accentColor: context.sbTheme.success,
                       onPressed: () => GlassToast.show(
                         context,
                         message: 'Component saved successfully!',
                         icon: Icons.check_circle_rounded,
-                        color: LiquidGlassTheme.success,
+                        color: context.sbTheme.success,
                       ),
                     ),
                     GlassButton(
                       label: 'Warning',
                       icon: Icons.warning_rounded,
-                      accentColor: LiquidGlassTheme.warning,
+                      accentColor: context.sbTheme.warning,
                       onPressed: () => GlassToast.show(
                         context,
                         message: 'Blur intensity is very high',
                         icon: Icons.warning_rounded,
-                        color: LiquidGlassTheme.warning,
+                        color: context.sbTheme.warning,
                       ),
                     ),
                     GlassButton(
                       label: 'Error',
                       icon: Icons.error_rounded,
-                      accentColor: LiquidGlassTheme.error,
+                      accentColor: context.sbTheme.error,
                       onPressed: () => GlassToast.show(
                         context,
                         message: 'Failed to load component',
                         icon: Icons.error_rounded,
-                        color: LiquidGlassTheme.error,
+                        color: context.sbTheme.error,
                       ),
                     ),
                     GlassButton(
                       label: 'Info',
                       icon: Icons.info_rounded,
-                      accentColor: LiquidGlassTheme.accent,
+                      accentColor: context.sbTheme.accent,
                       onPressed: () => GlassToast.show(
                         context,
                         message: 'New components available!',
                         icon: Icons.info_rounded,
-                        color: LiquidGlassTheme.accent,
+                        color: context.sbTheme.accent,
                       ),
                     ),
                   ],
@@ -1130,19 +1142,19 @@ class _SectionViewState extends State<_SectionView> {
                 label: 'Tinted Blue',
                 blur: LiquidGlassTheme.blurMedium,
                 opacity: 0.18,
-                tint: LiquidGlassTheme.accent.withOpacity(0.15),
+                tint: context.sbTheme.accent.withOpacity(0.15),
               ),
               _SurfaceSample(
                 label: 'Tinted Violet',
                 blur: LiquidGlassTheme.blurMedium,
                 opacity: 0.18,
-                tint: LiquidGlassTheme.accentViolet.withOpacity(0.15),
+                tint: context.sbTheme.accentViolet.withOpacity(0.15),
               ),
               _SurfaceSample(
                 label: 'Tinted Cyan',
                 blur: LiquidGlassTheme.blurMedium,
                 opacity: 0.18,
-                tint: LiquidGlassTheme.orbCyan.withOpacity(0.15),
+                tint: context.sbTheme.orbCyan.withOpacity(0.15),
               ),
             ],
           ),
@@ -1155,16 +1167,16 @@ class _SectionViewState extends State<_SectionView> {
               runSpacing: 12,
               children: [
                 _TokenCard(name: 'bgDeep', value: '#050814', color: const Color(0xFF050814)),
-                _TokenCard(name: 'accent', value: '#60A5FA', color: LiquidGlassTheme.accent),
-                _TokenCard(name: 'accentViolet', value: '#A78BFA', color: LiquidGlassTheme.accentViolet),
-                _TokenCard(name: 'success', value: '#34D399', color: LiquidGlassTheme.success),
-                _TokenCard(name: 'warning', value: '#FBBF24', color: LiquidGlassTheme.warning),
-                _TokenCard(name: 'error', value: '#F87171', color: LiquidGlassTheme.error),
-                _TokenCard(name: 'orbBlue', value: '#3B82F6', color: LiquidGlassTheme.orbBlue),
-                _TokenCard(name: 'orbViolet', value: '#7C3AED', color: LiquidGlassTheme.orbViolet),
-                _TokenCard(name: 'orbCyan', value: '#06B6D4', color: LiquidGlassTheme.orbCyan),
-                _TokenCard(name: 'orbPink', value: '#EC4899', color: LiquidGlassTheme.orbPink),
-                _TokenCard(name: 'orbEmerald', value: '#10B981', color: LiquidGlassTheme.orbEmerald),
+                _TokenCard(name: 'accent', value: '#60A5FA', color: context.sbTheme.accent),
+                _TokenCard(name: 'accentViolet', value: '#A78BFA', color: context.sbTheme.accentViolet),
+                _TokenCard(name: 'success', value: '#34D399', color: context.sbTheme.success),
+                _TokenCard(name: 'warning', value: '#FBBF24', color: context.sbTheme.warning),
+                _TokenCard(name: 'error', value: '#F87171', color: context.sbTheme.error),
+                _TokenCard(name: 'orbBlue', value: '#3B82F6', color: context.sbTheme.orbBlue),
+                _TokenCard(name: 'orbViolet', value: '#7C3AED', color: context.sbTheme.orbViolet),
+                _TokenCard(name: 'orbCyan', value: '#06B6D4', color: context.sbTheme.orbCyan),
+                _TokenCard(name: 'orbPink', value: '#EC4899', color: context.sbTheme.orbPink),
+                _TokenCard(name: 'orbEmerald', value: '#10B981', color: context.sbTheme.orbEmerald),
               ],
             ),
           ),
@@ -1312,7 +1324,7 @@ class _ToggleRow extends StatelessWidget {
       children: [
         Icon(
           value ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
-          color: color ?? LiquidGlassTheme.accent,
+          color: color ?? context.sbTheme.accent,
           size: 18,
         ),
         const SizedBox(width: 12),
@@ -1400,16 +1412,16 @@ class _SurfaceSample extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              color: LiquidGlassTheme.textPrimary,
+            style: TextStyle(
+              color: context.sbTheme.textPrimary,
               fontWeight: FontWeight.w600,
               fontSize: 13,
             ),
           ),
           Text(
             'blur: ${blur.toStringAsFixed(0)}px',
-            style: const TextStyle(
-              color: LiquidGlassTheme.textTertiary,
+            style: TextStyle(
+              color: context.sbTheme.textTertiary,
               fontSize: 11,
             ),
           ),
@@ -1434,7 +1446,7 @@ class _TokenCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusMd),
         color: Colors.white.withOpacity(0.04),
-        border: Border.all(color: LiquidGlassTheme.glassBorder),
+        border: Border.all(color: context.sbTheme.glassBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1451,16 +1463,16 @@ class _TokenCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             name,
-            style: const TextStyle(
-              color: LiquidGlassTheme.textPrimary,
+            style: TextStyle(
+              color: context.sbTheme.textPrimary,
               fontWeight: FontWeight.w600,
               fontSize: 11,
             ),
           ),
           Text(
             value,
-            style: const TextStyle(
-              color: LiquidGlassTheme.textTertiary,
+            style: TextStyle(
+              color: context.sbTheme.textTertiary,
               fontSize: 10,
             ),
           ),

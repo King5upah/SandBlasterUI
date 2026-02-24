@@ -70,7 +70,7 @@ class _GlassTextFieldState extends State<GlassTextField>
             borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusMd),
             boxShadow: [
               BoxShadow(
-                color: LiquidGlassTheme.accent.withOpacity(0.3 * _glowAnim.value),
+                color: context.sbTheme.accent.withOpacity(0.3 * _glowAnim.value),
                 blurRadius: 20 * _glowAnim.value,
                 spreadRadius: 2 * _glowAnim.value,
               ),
@@ -85,12 +85,12 @@ class _GlassTextFieldState extends State<GlassTextField>
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusMd),
                   color: _focused
-                      ? LiquidGlassTheme.accent.withOpacity(0.08)
-                      : LiquidGlassTheme.glassSurface,
+                      ? context.sbTheme.accent.withOpacity(0.08)
+                      : context.sbTheme.glassSurface,
                   border: Border.all(
                     color: _focused
-                        ? LiquidGlassTheme.accent.withOpacity(0.6)
-                        : LiquidGlassTheme.glassBorder,
+                        ? context.sbTheme.accent.withOpacity(0.6)
+                        : context.sbTheme.glassBorder,
                     width: _focused ? 1.5 : 1.0,
                   ),
                 ),
@@ -99,29 +99,29 @@ class _GlassTextFieldState extends State<GlassTextField>
                   controller: widget.controller,
                   obscureText: widget.obscureText,
                   keyboardType: widget.keyboardType,
-                  style: const TextStyle(color: LiquidGlassTheme.textPrimary),
+                  style: TextStyle(color: context.sbTheme.textPrimary),
                   decoration: InputDecoration(
                     labelText: widget.label,
                     hintText: widget.hint,
                     labelStyle: TextStyle(
                       color: _focused
-                          ? LiquidGlassTheme.accent
-                          : LiquidGlassTheme.textSecondary,
+                          ? context.sbTheme.accent
+                          : context.sbTheme.textSecondary,
                     ),
-                    hintStyle: const TextStyle(color: LiquidGlassTheme.textTertiary),
+                    hintStyle: TextStyle(color: context.sbTheme.textTertiary),
                     prefixIcon: widget.prefixIcon != null
                         ? Icon(
                             widget.prefixIcon,
                             color: _focused
-                                ? LiquidGlassTheme.accent
-                                : LiquidGlassTheme.textSecondary,
+                                ? context.sbTheme.accent
+                                : context.sbTheme.textSecondary,
                             size: 20,
                           )
                         : null,
                     suffixIcon: widget.suffixIcon != null
                         ? Icon(
                             widget.suffixIcon,
-                            color: LiquidGlassTheme.textSecondary,
+                            color: context.sbTheme.textSecondary,
                             size: 20,
                           )
                         : null,

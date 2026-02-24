@@ -25,10 +25,10 @@ class GlassNavbar extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
           height: 64,
-          decoration: const BoxDecoration(
-            color: Color(0x1AFFFFFF),
+          decoration: BoxDecoration(
+            color: const Color(0x1AFFFFFF),
             border: Border(
-              bottom: BorderSide(color: LiquidGlassTheme.glassBorder, width: 1),
+              bottom: BorderSide(color: context.sbTheme.glassBorder, width: 1),
             ),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -36,8 +36,8 @@ class GlassNavbar extends StatelessWidget {
             children: [
               // Logo
               ShaderMask(
-                shaderCallback: (bounds) => const LinearGradient(
-                  colors: [LiquidGlassTheme.accent, LiquidGlassTheme.accentViolet],
+                shaderCallback: (bounds) => LinearGradient(
+                  colors: [context.sbTheme.accent, context.sbTheme.accentViolet],
                 ).createShader(bounds),
                 child: Text(
                   title,
@@ -104,13 +104,13 @@ class _NavPillState extends State<_NavPill> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusPill),
             color: widget.isSelected
-                ? LiquidGlassTheme.accent.withOpacity(0.2)
+                ? context.sbTheme.accent.withOpacity(0.2)
                 : _hovered
                     ? Colors.white.withOpacity(0.08)
                     : Colors.transparent,
             border: Border.all(
               color: widget.isSelected
-                  ? LiquidGlassTheme.accent.withOpacity(0.5)
+                  ? context.sbTheme.accent.withOpacity(0.5)
                   : Colors.transparent,
               width: 1,
             ),
@@ -122,16 +122,16 @@ class _NavPillState extends State<_NavPill> {
                 widget.item.icon,
                 size: 16,
                 color: widget.isSelected
-                    ? LiquidGlassTheme.accent
-                    : LiquidGlassTheme.textSecondary,
+                    ? context.sbTheme.accent
+                    : context.sbTheme.textSecondary,
               ),
               const SizedBox(width: 6),
               Text(
                 widget.item.label,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       color: widget.isSelected
-                          ? LiquidGlassTheme.accent
-                          : LiquidGlassTheme.textSecondary,
+                          ? context.sbTheme.accent
+                          : context.sbTheme.textSecondary,
                       fontWeight: widget.isSelected
                           ? FontWeight.w600
                           : FontWeight.w500,

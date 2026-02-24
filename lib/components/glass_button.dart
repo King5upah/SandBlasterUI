@@ -24,7 +24,7 @@ class GlassButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = accentColor ?? LiquidGlassTheme.accent;
+    final color = accentColor ?? context.sbTheme.accent;
 
     if (variant == GlassButtonVariant.icon) {
       return LiquidGlassContainer(

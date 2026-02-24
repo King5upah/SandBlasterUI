@@ -82,13 +82,13 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
       }),
       onHover: (e) => setState(() => _mousePos = e.localPosition),
       cursor: isInteractive ? SystemMouseCursors.click : SystemMouseCursors.basic,
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _pressed = true),
-        onTapUp: (_) {
+      child: Listener(
+        onPointerDown: isInteractive ? (_) => setState(() => _pressed = true) : null,
+        onPointerUp: isInteractive ? (_) {
           setState(() => _pressed = false);
           widget.onTap?.call();
-        },
-        onTapCancel: () => setState(() => _pressed = false),
+        } : null,
+        onPointerCancel: isInteractive ? (_) => setState(() => _pressed = false) : null,
         child: AnimatedScale(
           scale: scale,
           duration: const Duration(milliseconds: 200),
@@ -102,7 +102,7 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
               boxShadow: [
                 widget.shadowOverride ??
                     BoxShadow(
-                      color: LiquidGlassTheme.accentGlow.withOpacity(shadowOpacity),
+                      color: context.sbTheme.accentGlow.withOpacity(shadowOpacity),
                       blurRadius: shadowSpread,
                       spreadRadius: _hovered ? 4 : 0,
                     ),
@@ -125,7 +125,7 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
                     ),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: widget.surfaceColor ?? LiquidGlassTheme.glassSurface,
+                        color: widget.surfaceColor ?? context.sbTheme.glassSurface,
                         borderRadius: BorderRadius.circular(widget.borderRadius),
                       ),
                     ),
@@ -184,7 +184,7 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(widget.borderRadius),
                         border: Border.all(
-                          color: widget.borderColor ?? LiquidGlassTheme.glassBorder,
+                          color: widget.borderColor ?? context.sbTheme.glassBorder,
                           width: 1.0,
                         ),
                       ),

@@ -56,7 +56,7 @@ class _GlassToggleState extends State<GlassToggle>
 
   @override
   Widget build(BuildContext context) {
-    final activeColor = widget.activeColor ?? LiquidGlassTheme.accent;
+    final activeColor = widget.activeColor ?? context.sbTheme.accent;
 
     return GestureDetector(
       onTap: () => widget.onChanged(!widget.value),
@@ -77,7 +77,7 @@ class _GlassToggleState extends State<GlassToggle>
                 ),
                 border: Border.all(
                   color: Color.lerp(
-                    LiquidGlassTheme.glassBorder,
+                    context.sbTheme.glassBorder,
                     activeColor.withOpacity(0.7),
                     _thumbAnim.value,
                   )!,
@@ -154,7 +154,7 @@ class GlassChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = color ?? LiquidGlassTheme.accent;
+    final c = color ?? context.sbTheme.accent;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(

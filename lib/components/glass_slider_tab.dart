@@ -47,7 +47,7 @@ class _GlassSliderState extends State<GlassSlider>
 
   @override
   Widget build(BuildContext context) {
-    final color = widget.activeColor ?? LiquidGlassTheme.accent;
+    final color = widget.activeColor ?? context.sbTheme.accent;
     final t = (widget.value - widget.min) / (widget.max - widget.min);
 
     return SliderTheme(
@@ -217,13 +217,13 @@ class GlassTabBar extends StatefulWidget {
 class _GlassTabBarState extends State<GlassTabBar> {
   @override
   Widget build(BuildContext context) {
-    final color = widget.activeColor ?? LiquidGlassTheme.accent;
+    final color = widget.activeColor ?? context.sbTheme.accent;
 
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusPill),
         color: Colors.white.withOpacity(0.05),
-        border: Border.all(color: LiquidGlassTheme.glassBorder),
+        border: Border.all(color: context.sbTheme.glassBorder),
       ),
       padding: const EdgeInsets.all(4),
       child: Row(
@@ -251,7 +251,7 @@ class _GlassTabBarState extends State<GlassTabBar> {
                 child: Text(
                   e.value,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: isSelected ? color : LiquidGlassTheme.textSecondary,
+                        color: isSelected ? color : context.sbTheme.textSecondary,
                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                       ),
                 ),

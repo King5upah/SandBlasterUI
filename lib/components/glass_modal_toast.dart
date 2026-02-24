@@ -64,7 +64,7 @@ class GlassModal extends StatelessWidget {
             child: LiquidGlassContainer(
               borderRadius: LiquidGlassTheme.radiusXl,
               blur: LiquidGlassTheme.blurHeavy,
-              surfaceColor: LiquidGlassTheme.glassElevated,
+              surfaceColor: context.sbTheme.glassElevated,
               padding: const EdgeInsets.all(28),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -89,7 +89,7 @@ class GlassModal extends StatelessWidget {
                   body,
                   if (actions != null) ...[
                     const SizedBox(height: 24),
-                    const Divider(color: LiquidGlassTheme.glassBorder),
+                    Divider(color: context.sbTheme.glassBorder),
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -125,9 +125,10 @@ class GlassToast {
     BuildContext context, {
     required String message,
     IconData icon = Icons.check_circle_rounded,
-    Color color = LiquidGlassTheme.success,
+    Color? color,
     Duration duration = const Duration(seconds: 3),
   }) {
+    color ??= context.sbTheme.success;
     _entry?.remove();
 
     final overlay = Overlay.of(context);
@@ -140,7 +141,7 @@ class GlassToast {
       builder: (ctx) => _GlassToastWidget(
         message: message,
         icon: icon,
-        color: color,
+        color: color!,
         controller: controller,
       ),
     );
@@ -217,8 +218,8 @@ class _GlassToastWidget extends StatelessWidget {
                           const SizedBox(width: 10),
                           Text(
                             message,
-                            style: const TextStyle(
-                              color: LiquidGlassTheme.textPrimary,
+                            style: TextStyle(
+                              color: context.sbTheme.textPrimary,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),

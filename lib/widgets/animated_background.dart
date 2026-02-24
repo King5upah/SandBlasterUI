@@ -17,13 +17,7 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
   late List<Animation<double>> _yAnims;
   final _rand = math.Random(42);
 
-  final List<_OrbConfig> _orbs = const [
-    _OrbConfig(color: LiquidGlassTheme.orbViolet, size: 480, opacity: 0.35),
-    _OrbConfig(color: LiquidGlassTheme.orbBlue, size: 380, opacity: 0.30),
-    _OrbConfig(color: LiquidGlassTheme.orbCyan, size: 320, opacity: 0.25),
-    _OrbConfig(color: LiquidGlassTheme.orbPink, size: 280, opacity: 0.20),
-    _OrbConfig(color: LiquidGlassTheme.orbEmerald, size: 240, opacity: 0.18),
-  ];
+  late List<_OrbConfig> _orbs;
 
   @override
   void initState() {
@@ -53,6 +47,18 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _orbs = [
+      _OrbConfig(color: context.sbTheme.orbViolet, size: 480, opacity: 0.35),
+      _OrbConfig(color: context.sbTheme.orbBlue, size: 380, opacity: 0.30),
+      _OrbConfig(color: context.sbTheme.orbCyan, size: 320, opacity: 0.25),
+      _OrbConfig(color: context.sbTheme.orbPink, size: 280, opacity: 0.20),
+      _OrbConfig(color: context.sbTheme.orbEmerald, size: 240, opacity: 0.18),
+    ];
+  }
+
+  @override
   void dispose() {
     for (var c in _controllers) {
       c.dispose();
@@ -67,13 +73,13 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
         // Base gradient
         Positioned.fill(
           child: Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: RadialGradient(
-                center: Alignment(-0.3, -0.5),
+                center: const Alignment(-0.3, -0.5),
                 radius: 1.5,
                 colors: [
-                  Color(0xFF0F1B4D),
-                  LiquidGlassTheme.bgDeep,
+                  const Color(0xFF0F1B4D),
+                  context.sbTheme.bgDeep,
                 ],
               ),
             ),
