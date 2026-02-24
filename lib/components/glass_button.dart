@@ -11,6 +11,7 @@ class GlassButton extends StatelessWidget {
   final GlassButtonVariant variant;
   final Color? accentColor;
   final bool loading;
+  final HitTestBehavior hitTestBehavior;
 
   const GlassButton({
     super.key,
@@ -20,6 +21,7 @@ class GlassButton extends StatelessWidget {
     this.variant = GlassButtonVariant.primary,
     this.accentColor,
     this.loading = false,
+    this.hitTestBehavior = HitTestBehavior.opaque,
   });
 
   @override
@@ -32,6 +34,7 @@ class GlassButton extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         interactive: true,
         onTap: onPressed,
+        hitTestBehavior: hitTestBehavior,
         surfaceColor: color.withOpacity(0.15),
         borderColor: color.withOpacity(0.4),
         child: Icon(icon, color: color, size: 22),
@@ -43,6 +46,7 @@ class GlassButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
       interactive: true,
       onTap: onPressed,
+      hitTestBehavior: hitTestBehavior,
       surfaceColor: variant == GlassButtonVariant.primary
           ? color.withOpacity(0.2)
           : Colors.transparent,

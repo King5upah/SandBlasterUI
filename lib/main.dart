@@ -67,7 +67,6 @@ class _LiquidGlassAppState extends State<LiquidGlassApp> {
             case SandblasterThemeMode.latte:
               activeTheme = LiquidGlassTheme.latteTheme;
               break;
-            case SandblasterThemeMode.dark:
             default:
               activeTheme = LiquidGlassTheme.darkTheme;
               break;

@@ -1331,7 +1331,7 @@ class _ToggleRow extends StatelessWidget {
         Expanded(
           child: Text(label, style: Theme.of(context).textTheme.bodyLarge),
         ),
-        GlassToggle(value: value, onChanged: onChanged, activeColor: color),
+        GlassToggle(value: value, onChanged: onChanged, activeTrackColor: color),
       ],
     );
   }

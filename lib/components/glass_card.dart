@@ -10,6 +10,10 @@ class GlassCard extends StatelessWidget {
   final Widget? trailing;
   final VoidCallback? onTap;
   final double? width;
+  final double? height;
+  final AlignmentGeometry? contentAlignment;
+  final double? contentMaxWidth;
+  final double? contentMaxHeight;
   final Color? accentColor;
 
   const GlassCard({
@@ -21,6 +25,10 @@ class GlassCard extends StatelessWidget {
     this.trailing,
     this.onTap,
     this.width,
+    this.height,
+    this.contentAlignment,
+    this.contentMaxWidth,
+    this.contentMaxHeight,
     this.accentColor,
   });
 
@@ -30,11 +38,19 @@ class GlassCard extends StatelessWidget {
 
     return LiquidGlassContainer(
       width: width,
+      height: height,
       borderRadius: LiquidGlassTheme.radiusLg,
       interactive: onTap != null,
       onTap: onTap,
       padding: const EdgeInsets.all(20),
-      child: Column(
+      child: Align(
+        alignment: contentAlignment ?? Alignment.topLeft,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: contentMaxWidth ?? double.infinity,
+            maxHeight: contentMaxHeight ?? double.infinity,
+          ),
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -83,6 +99,8 @@ class GlassCard extends StatelessWidget {
           child,
         ],
       ),
-    );
-  }
+    ),
+   ),
+  );
+ }
 }

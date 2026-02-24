@@ -5,33 +5,37 @@ import '../theme/liquid_glass_theme.dart';
 /// The core Liquid Glass primitive — frosted glass surface with specular highlight,
 /// gradient border, and optional mouse-tracking shimmer.
 class LiquidGlassContainer extends StatefulWidget {
-  final Widget child;
+  final Widget? child;
   final double? width;
   final double? height;
   final double borderRadius;
   final double blur;
   final Color? surfaceColor;
   final Color? borderColor;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? padding; // Changed to nullable
   final bool showSpecular;
   final bool interactive;
   final VoidCallback? onTap;
+  final EdgeInsetsGeometry? margin; // Added
   final BoxShadow? shadowOverride;
+  final HitTestBehavior hitTestBehavior; // Added
 
   const LiquidGlassContainer({
     super.key,
-    required this.child,
+    this.child, // Changed from required
     this.width,
     this.height,
     this.borderRadius = LiquidGlassTheme.radiusMd,
     this.blur = LiquidGlassTheme.blurMedium,
     this.surfaceColor,
     this.borderColor,
-    this.padding = const EdgeInsets.all(16),
+    this.padding, // Changed from default value
     this.showSpecular = true,
     this.interactive = false,
     this.onTap,
+    this.margin, // Added
     this.shadowOverride,
+    this.hitTestBehavior = HitTestBehavior.deferToChild, // Added
   });
 
   @override
@@ -83,6 +87,7 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
       onHover: (e) => setState(() => _mousePos = e.localPosition),
       cursor: isInteractive ? SystemMouseCursors.click : SystemMouseCursors.basic,
       child: Listener(
+        behavior: widget.hitTestBehavior,
         onPointerDown: isInteractive ? (_) => setState(() => _pressed = true) : null,
         onPointerUp: isInteractive ? (_) {
           setState(() => _pressed = false);
@@ -97,6 +102,7 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
             duration: const Duration(milliseconds: 300),
             width: widget.width,
             height: widget.height,
+            padding: widget.padding ?? const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(widget.borderRadius),
               boxShadow: [
@@ -192,7 +198,7 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
                   ),
                   // Content
                   Padding(
-                    padding: widget.padding,
+                    padding: widget.padding ?? const EdgeInsets.all(16),
                     child: widget.child,
                   ),
                 ],

@@ -5,13 +5,21 @@ import '../widgets/liquid_glass_container.dart';
 class GlassToggle extends StatefulWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
-  final Color? activeColor;
+  final Color? activeTrackColor;
+  final Color? inactiveTrackColor;
+  final Color? thumbColor;
+  final Widget? activeThumbIcon;
+  final Widget? inactiveThumbIcon;
 
   const GlassToggle({
     super.key,
     required this.value,
     required this.onChanged,
-    this.activeColor,
+    this.activeTrackColor,
+    this.inactiveTrackColor,
+    this.thumbColor,
+    this.activeThumbIcon,
+    this.inactiveThumbIcon,
   });
 
   @override
@@ -56,7 +64,9 @@ class _GlassToggleState extends State<GlassToggle>
 
   @override
   Widget build(BuildContext context) {
-    final activeColor = widget.activeColor ?? context.sbTheme.accent;
+    final actTrackColor = widget.activeTrackColor ?? context.sbTheme.accent;
+    final inactTrackColor = widget.inactiveTrackColor ?? Colors.white.withOpacity(0.1);
+    final currentThumbColor = widget.thumbColor ?? Color.lerp(Colors.white.withOpacity(0.8), actTrackColor, _thumbAnim.value)!;
 
     return GestureDetector(
       onTap: () => widget.onChanged(!widget.value),
@@ -71,21 +81,21 @@ class _GlassToggleState extends State<GlassToggle>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusPill),
                 color: Color.lerp(
-                  Colors.white.withOpacity(0.1),
-                  activeColor.withOpacity(0.3),
+                  inactTrackColor,
+                  actTrackColor.withOpacity(0.3),
                   _thumbAnim.value,
                 ),
                 border: Border.all(
                   color: Color.lerp(
                     context.sbTheme.glassBorder,
-                    activeColor.withOpacity(0.7),
+                    actTrackColor.withOpacity(0.7),
                     _thumbAnim.value,
                   )!,
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: activeColor.withOpacity(0.3 * _glowAnim.value),
+                    color: actTrackColor.withOpacity(0.3 * _glowAnim.value),
                     blurRadius: 12,
                     spreadRadius: 1,
                   ),
@@ -103,11 +113,7 @@ class _GlassToggleState extends State<GlassToggle>
                       height: 22,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Color.lerp(
-                          Colors.white.withOpacity(0.8),
-                          activeColor,
-                          _thumbAnim.value,
-                        ),
+                        color: currentThumbColor,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.3),
@@ -117,14 +123,18 @@ class _GlassToggleState extends State<GlassToggle>
                         ],
                       ),
                       child: Center(
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.4 * _thumbAnim.value),
-                          ),
-                        ),
+                        child: widget.value && widget.activeThumbIcon != null
+                            ? widget.activeThumbIcon
+                            : !widget.value && widget.inactiveThumbIcon != null
+                                ? widget.inactiveThumbIcon
+                                : Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white.withOpacity(0.4 * _thumbAnim.value),
+                                    ),
+                                  ),
                       ),
                     ),
                   ),
@@ -143,6 +153,8 @@ class GlassChip extends StatelessWidget {
   final Color? color;
   final IconData? icon;
   final bool outlined;
+  final VoidCallback? onTap;
+  final HitTestBehavior hitTestBehavior;
 
   const GlassChip({
     super.key,
@@ -150,12 +162,14 @@ class GlassChip extends StatelessWidget {
     this.color,
     this.icon,
     this.outlined = false,
+    this.onTap,
+    this.hitTestBehavior = HitTestBehavior.deferToChild,
   });
 
   @override
   Widget build(BuildContext context) {
     final c = color ?? context.sbTheme.accent;
-    return Container(
+    final content = Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusPill),
@@ -175,6 +189,23 @@ class GlassChip extends StatelessWidget {
           ),
         ],
       ),
+    );
+
+    if (onTap != null) {
+      return GestureDetector(
+        onTap: onTap,
+        behavior: hitTestBehavior,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: content,
+        ),
+      );
+    }
+    
+    // Even if not tappable, respect the hitTest behavior to optionally catch ghost touches
+    return Listener(
+      behavior: hitTestBehavior,
+      child: content,
     );
   }
 }
