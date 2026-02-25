@@ -108,15 +108,18 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
               boxShadow: [
                 widget.shadowOverride ??
                     BoxShadow(
-                      color: context.sbTheme.accentGlow.withOpacity(shadowOpacity),
-                      blurRadius: shadowSpread,
-                      spreadRadius: _hovered ? 4 : 0,
+                      color: context.sbTheme.glassShadow,
+                      blurRadius: shadowSpread * 1.5,
+                      spreadRadius: _hovered ? 2 : 0,
+                      offset: const Offset(0, 12),
                     ),
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 24,
-                  offset: const Offset(0, 8),
-                ),
+                // Crisp ambient shadow layer
+                if (widget.shadowOverride == null)
+                  BoxShadow(
+                    color: context.sbTheme.glassShadow.withOpacity(context.sbTheme.glassShadow.opacity * 0.5),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
               ],
             ),
             child: ClipRRect(
@@ -131,12 +134,27 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
                     ),
                     child: Container(
                       decoration: BoxDecoration(
+                        // 1. Solid surface tint (body structure to prevent mudiness)
                         color: widget.surfaceColor ?? context.sbTheme.glassSurface,
                         borderRadius: BorderRadius.circular(widget.borderRadius),
                       ),
                     ),
                   ),
-                  // Inner gradient fill
+                  // 2. Center luminous shine (simulates light passing through a frosted lens)
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      gradient: RadialGradient(
+                        center: Alignment.center,
+                        radius: 1.2,
+                        colors: [
+                          Colors.white.withOpacity(Theme.of(context).brightness == Brightness.light ? 0.3 : 0.08),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
+                  // 3. Diagonal glass glint for volumetric depth
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -144,9 +162,11 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Colors.white.withOpacity(0.12),
-                          Colors.white.withOpacity(0.03),
-                          Colors.transparent,
+                          Colors.white.withOpacity(0.5),
+                          Colors.white.withOpacity(0.0),
+                          Theme.of(context).brightness == Brightness.light 
+                              ? Colors.black.withOpacity(0.05) 
+                              : Colors.white.withOpacity(0.05),
                         ],
                         stops: const [0.0, 0.4, 1.0],
                       ),
@@ -184,18 +204,28 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
                         ),
                       ),
                     ),
-                  // Border gradient
-                  Positioned.fill(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                        border: Border.all(
-                          color: widget.borderColor ?? context.sbTheme.glassBorder,
-                          width: 1.0,
+                  // High-fidelity Border gradient
+                  if (widget.borderColor != null)
+                    Positioned.fill(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                          border: Border.all(
+                            color: widget.borderColor!,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: _GlassStrokePainter(
+                          radius: widget.borderRadius,
+                          brightness: Theme.of(context).brightness,
                         ),
                       ),
                     ),
-                  ),
                   // Content
                   Padding(
                     padding: widget.padding ?? const EdgeInsets.all(16),
@@ -233,4 +263,53 @@ class _ShimmerPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_ShimmerPainter old) => old.progress != progress;
+}
+
+class _GlassStrokePainter extends CustomPainter {
+  final double radius;
+  final Brightness brightness;
+
+  _GlassStrokePainter({required this.radius, required this.brightness});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    final rrect = RRect.fromRectAndRadius(rect, Radius.circular(radius));
+    
+    final isDark = brightness == Brightness.dark;
+
+    final paintTL = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Colors.white.withOpacity(isDark ? 0.6 : 0.9),
+          Colors.white.withOpacity(isDark ? 0.1 : 0.3),
+          Colors.transparent,
+        ],
+        stops: const [0.0, 0.4, 1.0],
+      ).createShader(rect);
+
+    final paintBR = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Colors.transparent,
+          isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
+          isDark ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.15),
+        ],
+        stops: const [0.0, 0.6, 1.0],
+      ).createShader(rect);
+
+    canvas.drawRRect(rrect, paintBR);
+    canvas.drawRRect(rrect, paintTL);
+  }
+
+  @override
+  bool shouldRepaint(covariant _GlassStrokePainter old) => old.radius != radius || old.brightness != brightness;
 }
