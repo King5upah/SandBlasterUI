@@ -73,7 +73,7 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
                 center: const Alignment(-0.3, -0.5),
                 radius: 1.5,
                 colors: [
-                  const Color(0xFF0F1B4D),
+                  context.sbTheme.bgHighlight,
                   context.sbTheme.bgDeep,
                 ],
               ),

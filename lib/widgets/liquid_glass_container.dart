@@ -30,7 +30,7 @@ class LiquidGlassContainer extends StatefulWidget {
     this.surfaceColor,
     this.borderColor,
     this.padding, // Changed from default value
-    this.showSpecular = true,
+    this.showSpecular = false,
     this.interactive = false,
     this.onTap,
     this.margin, // Added

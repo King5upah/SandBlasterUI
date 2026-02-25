@@ -20,6 +20,7 @@ class GalleryScreen extends StatefulWidget {
 class _GalleryScreenState extends State<GalleryScreen> {
   int _sidebarIndex = 0;
   bool _sidebarOpen = true;
+  bool _animatedBg = true; // New state variable
 
   final _sections = [
     'Overview',
@@ -45,41 +46,54 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Row(
-        children: [
-          // Sidebar
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOutCubic,
-            width: _sidebarOpen ? 240 : 0,
-            child: _sidebarOpen ? _Sidebar(
-              sections: _sections,
-              icons: _sectionIcons,
-              selectedIndex: _sidebarIndex,
-              onSectionSelected: (i) => setState(() => _sidebarIndex = i),
-            ) : null,
-          ),
-          // Main content
-          Expanded(
-            child: Column(
-              children: [
-                // Header
-                _Header(
-                  sidebarOpen: _sidebarOpen,
-                  onToggleSidebar: () => setState(() => _sidebarOpen = !_sidebarOpen),
-                  currentSection: _sections[_sidebarIndex],
+    return ThemeProviderIndicator(
+      builder: (context, currentMode) {
+        final content = Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Row(
+            children: [
+              // Sidebar
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOutCubic,
+                width: _sidebarOpen ? 240 : 0,
+                child: _sidebarOpen ? _Sidebar(
+                  sections: _sections,
+                  icons: _sectionIcons,
+                  selectedIndex: _sidebarIndex,
+                  onSectionSelected: (i) => setState(() => _sidebarIndex = i),
+                ) : null,
+              ),
+              // Main content
+              Expanded(
+                child: Column(
+                  children: [
+                    // Header
+                    _Header(
+                      sidebarOpen: _sidebarOpen,
+                      onToggleSidebar: () => setState(() => _sidebarOpen = !_sidebarOpen),
+                      currentSection: _sections[_sidebarIndex],
+                      animatedBg: _animatedBg,
+                      onToggleBg: () => setState(() => _animatedBg = !_animatedBg),
+                    ),
+                    // Body
+                    Expanded(
+                      child: _SectionView(sectionIndex: _sidebarIndex),
+                    ),
+                  ],
                 ),
-                // Body
-                Expanded(
-                  child: _SectionView(sectionIndex: _sidebarIndex),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+
+        return _animatedBg 
+            ? AnimatedBackground(child: content)
+            : Container(
+                color: context.sbTheme.bgDeep, // The tuned plain backgrounds
+                child: content,
+              );
+      },
     );
   }
 }
@@ -297,11 +311,15 @@ class _Header extends StatelessWidget {
   final bool sidebarOpen;
   final VoidCallback onToggleSidebar;
   final String currentSection;
+  final bool animatedBg;
+  final VoidCallback onToggleBg;
 
   const _Header({
     required this.sidebarOpen,
     required this.onToggleSidebar,
     required this.currentSection,
+    required this.animatedBg,
+    required this.onToggleBg,
   });
 
   @override
@@ -350,7 +368,7 @@ class _Header extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'v1.4.0',
+                      'v1.4.1',
                       style: TextStyle(
                         fontSize: 12,
                         color: context.sbTheme.success,
@@ -359,6 +377,13 @@ class _Header extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(width: 8),
+              GlassButton(
+                icon: animatedBg ? Icons.motion_photos_on_rounded : Icons.motion_photos_paused_rounded,
+                variant: GlassButtonVariant.icon,
+                accentColor: animatedBg ? context.sbTheme.orbBlue : context.sbTheme.textSecondary,
+                onPressed: onToggleBg,
               ),
               const SizedBox(width: 8),
               GlassButton(

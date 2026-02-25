@@ -5,6 +5,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
   final Color bgDeep;
   final Color bgMid;
   final Color bgSurface;
+  final Color bgHighlight;
   final Color orbBlue;
   final Color orbViolet;
   final Color orbCyan;
@@ -30,6 +31,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
     required this.bgDeep,
     required this.bgMid,
     required this.bgSurface,
+    required this.bgHighlight,
     required this.orbBlue,
     required this.orbViolet,
     required this.orbCyan,
@@ -57,6 +59,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
     Color? bgDeep,
     Color? bgMid,
     Color? bgSurface,
+    Color? bgHighlight,
     Color? orbBlue,
     Color? orbViolet,
     Color? orbCyan,
@@ -82,6 +85,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
       bgDeep: bgDeep ?? this.bgDeep,
       bgMid: bgMid ?? this.bgMid,
       bgSurface: bgSurface ?? this.bgSurface,
+      bgHighlight: bgHighlight ?? this.bgHighlight,
       orbBlue: orbBlue ?? this.orbBlue,
       orbViolet: orbViolet ?? this.orbViolet,
       orbCyan: orbCyan ?? this.orbCyan,
@@ -112,6 +116,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
       bgDeep: Color.lerp(bgDeep, other.bgDeep, t)!,
       bgMid: Color.lerp(bgMid, other.bgMid, t)!,
       bgSurface: Color.lerp(bgSurface, other.bgSurface, t)!,
+      bgHighlight: Color.lerp(bgHighlight, other.bgHighlight, t)!,
       orbBlue: Color.lerp(orbBlue, other.orbBlue, t)!,
       orbViolet: Color.lerp(orbViolet, other.orbViolet, t)!,
       orbCyan: Color.lerp(orbCyan, other.orbCyan, t)!,
@@ -140,6 +145,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
     bgDeep: Color(0xFF050814),
     bgMid: Color(0xFF0A0F2E),
     bgSurface: Color(0xFF0D1240),
+    bgHighlight: Color(0xFF0F1B4D), // Original dark blue gradient center
     orbBlue: Color(0xFF3B82F6),
     orbViolet: Color(0xFF7C3AED),
     orbCyan: Color(0xFF06B6D4),
@@ -163,9 +169,10 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
   );
 
   static const light = SandblasterThemeData(
-    bgDeep: Color(0xFFF0F4FC),
-    bgMid: Color(0xFFE2E8F0),
-    bgSurface: Color(0xFFCBD5E1),
+    bgDeep: Color(0xFFFFFFFF), // Pure white
+    bgMid: Color(0xFFF1F5F9),
+    bgSurface: Color(0xFFE2E8F0),
+    bgHighlight: Color(0xFFF8FAFC), // Faint blueish white
     orbBlue: Color(0xFFBFDBFE),
     orbViolet: Color(0xFFE9D5FF),
     orbCyan: Color(0xFFCFFAFE),
@@ -177,7 +184,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
     glassBorder: Color(0x80FFFFFF),
     glassHighlight: Color(0x99FFFFFF),
     glassShadow: Color(0x1A000000),
-    textPrimary: Color(0xFF0F172A),
+    textPrimary: Color(0xFF0A0F1A), // Darker text for extreme contrast
     textSecondary: Color(0xFF334155),
     textTertiary: Color(0xFF64748B),
     accent: Color(0xFF2563EB),
@@ -192,6 +199,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
     bgDeep: Color(0xFF1F0004),
     bgMid: Color(0xFF3B0008),
     bgSurface: Color(0xFF4C000B),
+    bgHighlight: Color(0xFF3B0008), // Ruby highlight
     orbBlue: Color(0xFFFF4D6D),
     orbViolet: Color(0xFFFF758F),
     orbCyan: Color(0xFFFF8FA3),
@@ -215,9 +223,10 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
   );
 
   static const latte = SandblasterThemeData(
-    bgDeep: Color(0xFFEBE3D5),
-    bgMid: Color(0xFFDED0B6),
-    bgSurface: Color(0xFFB2A59B),
+    bgDeep: Color(0xFFFAF6F0), // Super light caramel / cream
+    bgMid: Color(0xFFF4EAD5),
+    bgSurface: Color(0xFFE6D5B8),
+    bgHighlight: Color(0xFFF8F0E5), // Soft off-white tone
     orbBlue: Color(0xFFD2B48C),
     orbViolet: Color(0xFFC19A6B),
     orbCyan: Color(0xFFE8D0A9),
@@ -229,9 +238,9 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
     glassBorder: Color(0x99FFFFFF),
     glassHighlight: Color(0x99FFFFFF),
     glassShadow: Color(0x153C2A21),
-    textPrimary: Color(0xFF3C2A21),
-    textSecondary: Color(0xFF604A3C),
-    textTertiary: Color(0xFF8A7769),
+    textPrimary: Color(0xFF2A1C15), // Darker brown for contrast
+    textSecondary: Color(0xFF5A4435),
+    textTertiary: Color(0xFF826B5C),
     accent: Color(0xFFD0B8A8),
     accentGlow: Color(0x40D0B8A8),
     accentViolet: Color(0xFFAB8A72),
