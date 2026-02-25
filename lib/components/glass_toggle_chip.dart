@@ -93,13 +93,6 @@ class _GlassToggleState extends State<GlassToggle>
                   )!,
                   width: 1.5,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: actTrackColor.withOpacity(0.3 * _glowAnim.value),
-                    blurRadius: 12,
-                    spreadRadius: 1,
-                  ),
-                ],
               ),
               child: Stack(
                 children: [
@@ -169,13 +162,14 @@ class GlassChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = color ?? context.sbTheme.accent;
-    final content = Container(
+    return LiquidGlassContainer(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusPill),
-        color: outlined ? Colors.transparent : c.withOpacity(0.15),
-        border: Border.all(color: c.withOpacity(outlined ? 0.7 : 0.3), width: 1),
-      ),
+      borderRadius: LiquidGlassTheme.radiusPill,
+      surfaceColor: outlined ? Colors.transparent : c.withOpacity(0.15),
+      borderColor: c.withOpacity(outlined ? 0.7 : 0.3),
+      interactive: onTap != null,
+      onTap: onTap,
+      hitTestBehavior: hitTestBehavior,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -189,23 +183,6 @@ class GlassChip extends StatelessWidget {
           ),
         ],
       ),
-    );
-
-    if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
-        behavior: hitTestBehavior,
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: content,
-        ),
-      );
-    }
-    
-    // Even if not tappable, respect the hitTest behavior to optionally catch ghost touches
-    return Listener(
-      behavior: hitTestBehavior,
-      child: content,
     );
   }
 }

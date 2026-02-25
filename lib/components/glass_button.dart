@@ -51,11 +51,6 @@ class GlassButton extends StatelessWidget {
           ? color.withOpacity(0.2)
           : Colors.transparent,
       borderColor: color.withOpacity(0.5),
-      shadowOverride: BoxShadow(
-        color: color.withOpacity(0.25),
-        blurRadius: 20,
-        spreadRadius: 0,
-      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
