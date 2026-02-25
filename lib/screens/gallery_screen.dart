@@ -7,6 +7,7 @@ import '../../components/glass_text_field.dart';
 import '../../components/glass_toggle_chip.dart';
 import '../../components/glass_slider_tab.dart';
 import '../../components/glass_modal_toast.dart';
+import '../widgets/animated_background.dart';
 import '../../main.dart';
 import 'dart:ui';
 
@@ -46,55 +47,51 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ThemeProviderIndicator(
-      builder: (context, currentMode) {
-        final content = Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Row(
-            children: [
-              // Sidebar
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOutCubic,
-                width: _sidebarOpen ? 240 : 0,
-                child: _sidebarOpen ? _Sidebar(
-                  sections: _sections,
-                  icons: _sectionIcons,
-                  selectedIndex: _sidebarIndex,
-                  onSectionSelected: (i) => setState(() => _sidebarIndex = i),
-                ) : null,
-              ),
-              // Main content
-              Expanded(
-                child: Column(
-                  children: [
-                    // Header
-                    _Header(
-                      sidebarOpen: _sidebarOpen,
-                      onToggleSidebar: () => setState(() => _sidebarOpen = !_sidebarOpen),
-                      currentSection: _sections[_sidebarIndex],
-                      animatedBg: _animatedBg,
-                      onToggleBg: () => setState(() => _animatedBg = !_animatedBg),
-                    ),
-                    // Body
-                    Expanded(
-                      child: _SectionView(sectionIndex: _sidebarIndex),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+    final content = Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Row(
+        children: [
+          // Sidebar
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOutCubic,
+            width: _sidebarOpen ? 240 : 0,
+            child: _sidebarOpen ? _Sidebar(
+              sections: _sections,
+              icons: _sectionIcons,
+              selectedIndex: _sidebarIndex,
+              onSectionSelected: (i) => setState(() => _sidebarIndex = i),
+            ) : null,
           ),
-        );
-
-        return _animatedBg 
-            ? AnimatedBackground(child: content)
-            : Container(
-                color: context.sbTheme.bgDeep, // The tuned plain backgrounds
-                child: content,
-              );
-      },
+          // Main content
+          Expanded(
+            child: Column(
+              children: [
+                // Header
+                _Header(
+                  sidebarOpen: _sidebarOpen,
+                  onToggleSidebar: () => setState(() => _sidebarOpen = !_sidebarOpen),
+                  currentSection: _sections[_sidebarIndex],
+                  animatedBg: _animatedBg,
+                  onToggleBg: () => setState(() => _animatedBg = !_animatedBg),
+                ),
+                // Body
+                Expanded(
+                  child: _SectionView(sectionIndex: _sidebarIndex),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
+
+    return _animatedBg 
+        ? AnimatedBackground(child: content)
+        : Container(
+            color: context.sbTheme.bgDeep, // The tuned plain backgrounds
+            child: content,
+          );
   }
 }
 

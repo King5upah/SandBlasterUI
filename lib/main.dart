@@ -89,11 +89,9 @@ class _RootShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.sbTheme.bgDeep,
-      body: AnimatedBackground(
-        child: const GalleryScreen(),
-      ),
+    return const Scaffold(
+      backgroundColor: Colors.transparent,
+      body: GalleryScreen(),
     );
   }
 }
