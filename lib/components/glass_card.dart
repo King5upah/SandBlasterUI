@@ -15,6 +15,7 @@ class GlassCard extends StatelessWidget {
   final double? contentMaxWidth;
   final double? contentMaxHeight;
   final Color? accentColor;
+  final bool showShadow;
 
   const GlassCard({
     super.key,
@@ -30,6 +31,7 @@ class GlassCard extends StatelessWidget {
     this.contentMaxWidth,
     this.contentMaxHeight,
     this.accentColor,
+    this.showShadow = true,
   });
 
   @override
@@ -37,6 +39,7 @@ class GlassCard extends StatelessWidget {
     final color = accentColor ?? context.sbTheme.accent;
 
     return LiquidGlassContainer(
+      showShadow: showShadow,
       width: width,
       height: height,
       borderRadius: LiquidGlassTheme.radiusLg,
@@ -63,9 +66,9 @@ class GlassCard extends StatelessWidget {
                     height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: color.withOpacity(0.15),
+                      color: color.withValues(alpha: 0.15),
                       border: Border.all(
-                        color: color.withOpacity(0.3),
+                        color: color.withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),

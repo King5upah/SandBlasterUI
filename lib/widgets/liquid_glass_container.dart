@@ -19,6 +19,8 @@ class LiquidGlassContainer extends StatefulWidget {
   final EdgeInsetsGeometry? margin; // Added
   final BoxShadow? shadowOverride;
   final HitTestBehavior hitTestBehavior; // Added
+  final bool showShadow;
+  final String? semanticLabel;
 
   const LiquidGlassContainer({
     super.key,
@@ -36,6 +38,8 @@ class LiquidGlassContainer extends StatefulWidget {
     this.margin, // Added
     this.shadowOverride,
     this.hitTestBehavior = HitTestBehavior.deferToChild, // Added
+    this.showShadow = true,
+    this.semanticLabel,
   });
 
   @override
@@ -46,6 +50,7 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
     with SingleTickerProviderStateMixin {
   bool _hovered = false;
   bool _pressed = false;
+  bool _focused = false;
   late AnimationController _shimmerController;
   late Animation<double> _shimmerAnim;
   Offset _mousePos = Offset.zero;
@@ -60,9 +65,6 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
     _shimmerAnim = Tween<double>(begin: -1, end: 2).animate(
       CurvedAnimation(parent: _shimmerController, curve: Curves.easeInOut),
     );
-    if (widget.interactive) {
-      _shimmerController.repeat();
-    }
   }
 
   @override
@@ -76,28 +78,54 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
     final isInteractive = widget.interactive || widget.onTap != null;
     final scale = _pressed ? 0.97 : (_hovered ? 1.02 : 1.0);
     final shadowSpread = _hovered ? 20.0 : 8.0;
-    final shadowOpacity = _hovered ? 0.35 : 0.15;
 
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() {
-        _hovered = false;
-        _pressed = false;
-      }),
-      onHover: (e) => setState(() => _mousePos = e.localPosition),
-      cursor: isInteractive ? SystemMouseCursors.click : SystemMouseCursors.basic,
-      child: Listener(
-        behavior: widget.hitTestBehavior,
-        onPointerDown: isInteractive ? (_) => setState(() => _pressed = true) : null,
-        onPointerUp: isInteractive ? (_) {
-          setState(() => _pressed = false);
-          widget.onTap?.call();
-        } : null,
-        onPointerCancel: isInteractive ? (_) => setState(() => _pressed = false) : null,
-        child: AnimatedScale(
-          scale: scale,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCubic,
+    return Semantics(
+      container: true,
+      button: isInteractive,
+      enabled: isInteractive,
+      label: widget.semanticLabel,
+      child: FocusableActionDetector(
+        mouseCursor: isInteractive ? SystemMouseCursors.click : SystemMouseCursors.basic,
+        onShowHoverHighlight: (v) {
+          setState(() => _hovered = v);
+          if ((v || _focused) && isInteractive) {
+            _shimmerController.repeat();
+          } else if (!v && !_focused && isInteractive) {
+            _shimmerController.stop();
+            _shimmerController.reset();
+            setState(() => _pressed = false);
+          }
+        },
+        onShowFocusHighlight: (v) {
+          setState(() => _focused = v);
+          if ((v || _hovered) && isInteractive) _shimmerController.repeat();
+          if (!v && !_hovered && isInteractive) {
+            _shimmerController.stop();
+            _shimmerController.reset();
+          }
+        },
+        actions: {
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (intent) {
+              widget.onTap?.call();
+              return null;
+            },
+          ),
+        },
+        child: Listener(
+          behavior: widget.hitTestBehavior,
+          onPointerDown: isInteractive ? (_) => setState(() => _pressed = true) : null,
+          onPointerUp: isInteractive ? (_) {
+            setState(() => _pressed = false);
+            widget.onTap?.call();
+          } : null,
+          onPointerCancel: isInteractive ? (_) => setState(() => _pressed = false) : null,
+          onPointerHover: (e) => setState(() => _mousePos = e.localPosition),
+          child: AnimatedScale(
+            scale: scale,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+            child: RepaintBoundary(
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             width: widget.width,
@@ -105,7 +133,7 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
             padding: widget.padding ?? const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(widget.borderRadius),
-              boxShadow: [
+              boxShadow: widget.showShadow ? [
                 widget.shadowOverride ??
                     BoxShadow(
                       color: context.sbTheme.glassShadow,
@@ -116,64 +144,74 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
                 // Crisp ambient shadow layer
                 if (widget.shadowOverride == null)
                   BoxShadow(
-                    color: context.sbTheme.glassShadow.withOpacity(context.sbTheme.glassShadow.opacity * 0.5),
+                    color: context.sbTheme.glassShadow.withValues(alpha: context.sbTheme.glassShadow.a * 0.5),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
-              ],
+              ] : null,
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(widget.borderRadius),
               child: Stack(
                 children: [
                   // Backdrop blur
-                  BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: widget.blur,
-                      sigmaY: widget.blur,
-                    ),
-                    child: Container(
+                  if (!context.sbTheme.useOpaqueBackground)
+                    BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: widget.blur,
+                        sigmaY: widget.blur,
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          // 1. Solid surface tint (body structure to prevent mudiness)
+                          color: widget.surfaceColor ?? context.sbTheme.glassSurface,
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                        ),
+                      ),
+                    )
+                  else
+                    Container(
                       decoration: BoxDecoration(
-                        // 1. Solid surface tint (body structure to prevent mudiness)
                         color: widget.surfaceColor ?? context.sbTheme.glassSurface,
                         borderRadius: BorderRadius.circular(widget.borderRadius),
                       ),
                     ),
-                  ),
                   // 2. Center luminous shine (simulates light passing through a frosted lens)
-                  Container(
+                  if (!context.sbTheme.useOpaqueBackground)
+                    Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       gradient: RadialGradient(
                         center: Alignment.center,
                         radius: 1.2,
                         colors: [
-                          Colors.white.withOpacity(Theme.of(context).brightness == Brightness.light ? 0.3 : 0.08),
+                          Colors.white.withValues(alpha: Theme.of(context).brightness == Brightness.light ? 0.3 : 0.08),
                           Colors.transparent,
                         ],
                       ),
+                      ),
                     ),
-                  ),
                   // 3. Diagonal glass glint for volumetric depth
-                  Container(
+                  if (!context.sbTheme.useOpaqueBackground)
+                    Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Colors.white.withOpacity(0.5),
-                          Colors.white.withOpacity(0.0),
+                          Colors.white.withValues(alpha: 0.5),
+                          Colors.white.withValues(alpha: 0.0),
                           Theme.of(context).brightness == Brightness.light 
-                              ? Colors.black.withOpacity(0.05) 
-                              : Colors.white.withOpacity(0.05),
+                              ? Colors.black.withValues(alpha: 0.05) 
+                              : Colors.white.withValues(alpha: 0.05),
                         ],
                         stops: const [0.0, 0.4, 1.0],
                       ),
+                      ),
                     ),
-                  ),
                   // Specular highlight (top-left arc)
-                  if (widget.showSpecular)
+                  if (widget.showSpecular && !context.sbTheme.useOpaqueBackground)
                     Positioned(
                       top: -20,
                       left: -20,
@@ -184,7 +222,7 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
                           borderRadius: BorderRadius.circular(80),
                           gradient: RadialGradient(
                             colors: [
-                              Colors.white.withOpacity(0.25),
+                              Colors.white.withValues(alpha: 0.25),
                               Colors.transparent,
                             ],
                           ),
@@ -231,11 +269,26 @@ class _LiquidGlassContainerState extends State<LiquidGlassContainer>
                     padding: widget.padding ?? const EdgeInsets.all(16),
                     child: widget.child,
                   ),
+                  // Focus Ring
+                  if (_focused && isInteractive)
+                    Positioned.fill(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                          border: Border.all(
+                            color: context.sbTheme.accent,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
           ),
+          ),
         ),
+      ),
       ),
     );
   }
@@ -254,7 +307,7 @@ class _ShimmerPainter extends CustomPainter {
         end: Alignment(progress, 0),
         colors: [
           Colors.transparent,
-          Colors.white.withOpacity(0.06),
+          Colors.white.withValues(alpha: 0.06),
           Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -285,8 +338,8 @@ class _GlassStrokePainter extends CustomPainter {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Colors.white.withOpacity(isDark ? 0.6 : 0.9),
-          Colors.white.withOpacity(isDark ? 0.1 : 0.3),
+          Colors.white.withValues(alpha: isDark ? 0.6 : 0.9),
+          Colors.white.withValues(alpha: isDark ? 0.1 : 0.3),
           Colors.transparent,
         ],
         stops: const [0.0, 0.4, 1.0],
@@ -300,8 +353,8 @@ class _GlassStrokePainter extends CustomPainter {
         end: Alignment.bottomRight,
         colors: [
           Colors.transparent,
-          isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
-          isDark ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.15),
+          isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
+          isDark ? Colors.white.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.15),
         ],
         stops: const [0.0, 0.6, 1.0],
       ).createShader(rect);

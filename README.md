@@ -28,7 +28,7 @@ Wrap your `MaterialApp` with the `LiquidGlassTheme` using the new `SandblasterTh
 import 'package:your_app/theme/liquid_glass_theme.dart';
 
 MaterialApp(
-  // Choose between darkTheme, lightTheme, rubyTheme, or latteTheme
+  // Choose between darkTheme, lightTheme, rubyTheme, latteTheme, or inkyTheme
   theme: LiquidGlassTheme.darkTheme, 
   home: YourRootWidget(),
 )
@@ -85,17 +85,19 @@ LiquidGlassContainer(
 
 ## 🛠 Features
 
-- **LiquidGlassContainer**: Frosted glass surfaces with real-time backdrop blur, specular highlights (top-left arc), and mouse-tracking shimmer.
-- **AnimatedBackground**: Smoothly moving gradient orbs using `CustomPainter` for high performance, with an optional grain texture overlay.
+- **LiquidGlassContainer**: Frosted glass surfaces with real-time backdrop blur, specular highlights, and mouse-tracking shimmer. Now supports **Toggleable Shadows** (`showShadow: false`).
+- **AnimatedBackground**: Smoothly moving gradient orbs using `CustomPainter` for high performance, heavily optimized via `RepaintBoundary` architecture.
 - **Physics Motion**: All animations use physics-based curves for a natural, premium feel.
-- **Adaptive Color**: Components tint themselves based on the background, maintaining legibility while looking integrated.
+- **Accessibility Integration**: Built-in support for `Semantics` and keyboard-accessible Focus Rings via `FocusableActionDetector`.
+- **Flexible Theme Engine**: Support for entirely opaque backgrounds (`useOpaqueBackground`) enabling alternative textures like the new paper-inspired `inkyTheme`.
+- **Pre-built Components**: Now includes native-like `GlassAlertDialog` alongside buttons, cards, toggles, text fields, tabs, and more.
 
-### 🛡 Web & Desktop Architecture (v1.4.0)
+### 🛡 Web & Desktop Architecture (v2.0.0)
 Sandblaster is hardened for flexible viewport environments:
 - **Flex Layout Controls**: `GlassCard` supports `contentMaxWidth` and `contentAlignment` to prevent component stretching on ultrawide displays.
 - **GlassGalleryModal**: A safe, fullscreen modal built on `Dialog.fullscreen` and `SafeArea`, dynamically constraining `InteractiveViewer` bounds to prevent Web render crashes.
-- **Hit Test Boundaries**: All interactive components (`GlassButton`, `GlassChip`, `LiquidGlassContainer`) expose `hitTestBehavior` to prevent "ghost touches" through overlapping glass layers.
-- **Standardized APIs**: Components like `GlassToggle` map directly to standard Material naming conventions (`activeTrackColor`, `thumbIcon`, etc.) for seamless adoption.
+- **Hit Test Boundaries**: All interactive components expose `hitTestBehavior` to prevent "ghost touches" through overlapping glass layers.
+- **Accessible By Default**: Components map tightly to standardized semantics and ARIA-aligned paradigms out of the box.
 
 ---
 *Built with Flutter Web · 2025*

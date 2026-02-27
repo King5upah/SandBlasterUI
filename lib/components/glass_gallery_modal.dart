@@ -1,7 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../theme/liquid_glass_theme.dart';
-import '../widgets/liquid_glass_container.dart';
 import 'glass_button.dart';
 
 class GlassGalleryModal extends StatelessWidget {
@@ -15,7 +13,7 @@ class GlassGalleryModal extends StatelessWidget {
     return showDialog(
       context: context,
       useSafeArea: false,
-      barrierColor: Colors.black.withOpacity(0.85),
+      barrierColor: Colors.black.withValues(alpha: 0.85),
       builder: (ctx) {
         return Dialog.fullscreen(
           backgroundColor: Colors.transparent,

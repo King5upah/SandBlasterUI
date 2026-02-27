@@ -10,6 +10,7 @@ class GlassToggle extends StatefulWidget {
   final Color? thumbColor;
   final Widget? activeThumbIcon;
   final Widget? inactiveThumbIcon;
+  final bool showShadow;
 
   const GlassToggle({
     super.key,
@@ -20,6 +21,7 @@ class GlassToggle extends StatefulWidget {
     this.thumbColor,
     this.activeThumbIcon,
     this.inactiveThumbIcon,
+    this.showShadow = true,
   });
 
   @override
@@ -30,7 +32,6 @@ class _GlassToggleState extends State<GlassToggle>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _thumbAnim;
-  late Animation<double> _glowAnim;
 
   @override
   void initState() {
@@ -41,13 +42,12 @@ class _GlassToggleState extends State<GlassToggle>
       value: widget.value ? 1.0 : 0.0,
     );
     _thumbAnim = CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic);
-    _glowAnim = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
   }
 
   @override
-  void didUpdateWidget(GlassToggle old) {
-    super.didUpdateWidget(old);
-    if (old.value != widget.value) {
+  void didUpdateWidget(GlassToggle oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
       if (widget.value) {
         _controller.forward();
       } else {
@@ -65,12 +65,15 @@ class _GlassToggleState extends State<GlassToggle>
   @override
   Widget build(BuildContext context) {
     final actTrackColor = widget.activeTrackColor ?? context.sbTheme.accent;
-    final inactTrackColor = widget.inactiveTrackColor ?? Colors.white.withOpacity(0.1);
-    final currentThumbColor = widget.thumbColor ?? Color.lerp(Colors.white.withOpacity(0.8), actTrackColor, _thumbAnim.value)!;
+    final inactTrackColor = widget.inactiveTrackColor ?? Colors.white.withValues(alpha: 0.1);
+    final currentThumbColor = widget.thumbColor ?? Color.lerp(Colors.white.withValues(alpha: 0.8), actTrackColor, _thumbAnim.value)!;
 
-    return GestureDetector(
-      onTap: () => widget.onChanged(!widget.value),
-      child: MouseRegion(
+    return Semantics(
+      toggled: widget.value,
+      label: 'Toggle',
+      child: GestureDetector(
+        onTap: () => widget.onChanged(!widget.value),
+        child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: AnimatedBuilder(
           animation: _controller,
@@ -82,13 +85,13 @@ class _GlassToggleState extends State<GlassToggle>
                 borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusPill),
                 color: Color.lerp(
                   inactTrackColor,
-                  actTrackColor.withOpacity(0.3),
+                  actTrackColor.withValues(alpha: 0.3),
                   _thumbAnim.value,
                 ),
                 border: Border.all(
                   color: Color.lerp(
                     context.sbTheme.glassBorder,
-                    actTrackColor.withOpacity(0.7),
+                    actTrackColor.withValues(alpha: 0.7),
                     _thumbAnim.value,
                   )!,
                   width: 1.5,
@@ -107,13 +110,13 @@ class _GlassToggleState extends State<GlassToggle>
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: currentThumbColor,
-                        boxShadow: [
+                        boxShadow: widget.showShadow ? [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black.withValues(alpha: 0.3),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
-                        ],
+                        ] : null,
                       ),
                       child: Center(
                         child: widget.value && widget.activeThumbIcon != null
@@ -125,7 +128,7 @@ class _GlassToggleState extends State<GlassToggle>
                                     height: 8,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.white.withOpacity(0.4 * _thumbAnim.value),
+                                      color: Colors.white.withValues(alpha: 0.4 * _thumbAnim.value),
                                     ),
                                   ),
                       ),
@@ -136,6 +139,7 @@ class _GlassToggleState extends State<GlassToggle>
             );
           },
         ),
+      ),
       ),
     );
   }
@@ -148,6 +152,7 @@ class GlassChip extends StatelessWidget {
   final bool outlined;
   final VoidCallback? onTap;
   final HitTestBehavior hitTestBehavior;
+  final bool showShadow;
 
   const GlassChip({
     super.key,
@@ -157,20 +162,25 @@ class GlassChip extends StatelessWidget {
     this.outlined = false,
     this.onTap,
     this.hitTestBehavior = HitTestBehavior.deferToChild,
+    this.showShadow = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final c = color ?? context.sbTheme.accent;
-    return LiquidGlassContainer(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      borderRadius: LiquidGlassTheme.radiusPill,
-      surfaceColor: outlined ? Colors.transparent : c.withOpacity(0.15),
-      borderColor: c.withOpacity(outlined ? 0.7 : 0.3),
-      interactive: onTap != null,
-      onTap: onTap,
-      hitTestBehavior: hitTestBehavior,
-      child: Row(
+    return Semantics(
+      label: label,
+      button: onTap != null,
+      child: LiquidGlassContainer(
+        showShadow: showShadow,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        borderRadius: LiquidGlassTheme.radiusPill,
+        surfaceColor: outlined ? Colors.transparent : c.withValues(alpha: 0.15),
+        borderColor: c.withValues(alpha: outlined ? 0.7 : 0.3),
+        interactive: onTap != null,
+        onTap: onTap,
+        hitTestBehavior: hitTestBehavior,
+        child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
@@ -182,6 +192,7 @@ class GlassChip extends StatelessWidget {
             style: Theme.of(context).textTheme.labelMedium?.copyWith(color: c),
           ),
         ],
+      ),
       ),
     );
   }

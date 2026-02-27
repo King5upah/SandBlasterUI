@@ -26,6 +26,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
   final Color success;
   final Color warning;
   final Color error;
+  final bool useOpaqueBackground;
 
   const SandblasterThemeData({
     required this.bgDeep,
@@ -52,6 +53,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
     required this.success,
     required this.warning,
     required this.error,
+    this.useOpaqueBackground = false,
   });
 
   @override
@@ -80,6 +82,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
     Color? success,
     Color? warning,
     Color? error,
+    bool? useOpaqueBackground,
   }) {
     return SandblasterThemeData(
       bgDeep: bgDeep ?? this.bgDeep,
@@ -106,6 +109,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
       success: success ?? this.success,
       warning: warning ?? this.warning,
       error: error ?? this.error,
+      useOpaqueBackground: useOpaqueBackground ?? this.useOpaqueBackground,
     );
   }
 
@@ -137,6 +141,7 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
       success: Color.lerp(success, other.success, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
       error: Color.lerp(error, other.error, t)!,
+      useOpaqueBackground: t < 0.5 ? useOpaqueBackground : other.useOpaqueBackground,
     );
   }
 
@@ -248,6 +253,34 @@ class SandblasterThemeData extends ThemeExtension<SandblasterThemeData> {
     warning: Color(0xFFD4A373),
     error: Color(0xFFBC4749),
   );
+
+  static const inky = SandblasterThemeData(
+    bgDeep: Color(0xFFF4F1EA), // Thick, slightly textured paper off-white
+    bgMid: Color(0xFFEAE5D9), // Slightly darker paper grain
+    bgSurface: Color(0xFFE2DCCF), // Elevated paper
+    bgHighlight: Color(0xFFF9F7F1), // Purest paper white highlight
+    orbBlue: Color(0xFF1D3557), // Deep ink blue
+    orbViolet: Color(0xFF452B4E), // Deep dark violet ink
+    orbCyan: Color(0xFF2A5256), // Dark teal ink
+    orbPink: Color(0xFF682D3D), // Burgundy/magenta ink
+    orbEmerald: Color(0xFF2B4738), // Forest/emerald ink
+    glassSurface: Color(0x2EEAE5D9), // Frosted paper-like glass
+    glassElevated: Color(0x40F9F7F1), // Brighter frosted glass
+    glassOverlay: Color(0x59FFFFFF),
+    glassBorder: Color(0x33101820), // Subtle ink border for contrast
+    glassHighlight: Color(0x80FFFFFF),
+    glassShadow: Color(0x1A050B14), // Dark ink shadow
+    textPrimary: Color(0xFF101820), // Deep blue-black ink
+    textSecondary: Color(0xFF384554), // Faded ink
+    textTertiary: Color(0xFF657585), // Washed ink
+    accent: Color(0xFF1D3557), // Primary deep blue ink
+    accentGlow: Color(0x331D3557),
+    accentViolet: Color(0xFF452B4E),
+    success: Color(0xFF2E5945), // Subdued ink green
+    warning: Color(0xFF915E22), // Subdued ink yellow/brown
+    error: Color(0xFF8A2B3D), // Subdued ink red
+    useOpaqueBackground: true,
+  );
 }
 
 class LiquidGlassTheme {
@@ -266,11 +299,23 @@ class LiquidGlassTheme {
   static ThemeData get lightTheme => _buildTheme(Brightness.light, SandblasterThemeData.light);
   static ThemeData get rubyTheme => _buildTheme(Brightness.dark, SandblasterThemeData.ruby);
   static ThemeData get latteTheme => _buildTheme(Brightness.light, SandblasterThemeData.latte);
+  static ThemeData get inkyTheme => _buildTheme(
+        Brightness.light,
+        SandblasterThemeData.inky,
+        isSerifTitle: true,
+      );
 
-  static ThemeData _buildTheme(Brightness brightness, SandblasterThemeData ext) {
+  static ThemeData _buildTheme(Brightness brightness, SandblasterThemeData ext, {bool isSerifTitle = false}) {
     final baseTextTheme = brightness == Brightness.dark
         ? ThemeData.dark().textTheme
         : ThemeData.light().textTheme;
+    
+    TextStyle titleFont(TextStyle style) {
+      if (isSerifTitle) {
+        return GoogleFonts.lora(textStyle: style);
+      }
+      return GoogleFonts.inter(textStyle: style);
+    }
 
     return ThemeData(
       useMaterial3: true,
@@ -283,39 +328,39 @@ class LiquidGlassTheme {
       ),
       extensions: [ext],
       textTheme: GoogleFonts.interTextTheme(baseTextTheme).copyWith(
-        displayLarge: GoogleFonts.inter(
+        displayLarge: titleFont(TextStyle(
           fontSize: 48,
           fontWeight: FontWeight.w700,
           color: ext.textPrimary,
           letterSpacing: -1.5,
-        ),
-        displayMedium: GoogleFonts.inter(
+        )),
+        displayMedium: titleFont(TextStyle(
           fontSize: 36,
           fontWeight: FontWeight.w700,
           color: ext.textPrimary,
           letterSpacing: -1.0,
-        ),
-        headlineLarge: GoogleFonts.inter(
+        )),
+        headlineLarge: titleFont(TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w600,
           color: ext.textPrimary,
           letterSpacing: -0.5,
-        ),
-        headlineMedium: GoogleFonts.inter(
+        )),
+        headlineMedium: titleFont(TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w600,
           color: ext.textPrimary,
-        ),
-        titleLarge: GoogleFonts.inter(
+        )),
+        titleLarge: titleFont(TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: ext.textPrimary,
-        ),
-        titleMedium: GoogleFonts.inter(
+        )),
+        titleMedium: titleFont(TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
           color: ext.textPrimary,
-        ),
+        )),
         bodyLarge: GoogleFonts.inter(
           fontSize: 16,
           fontWeight: FontWeight.w400,

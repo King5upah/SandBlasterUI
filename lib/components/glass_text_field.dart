@@ -1,6 +1,6 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../theme/liquid_glass_theme.dart';
+import '../widgets/liquid_glass_container.dart';
 
 class GlassTextField extends StatefulWidget {
   final String label;
@@ -10,6 +10,7 @@ class GlassTextField extends StatefulWidget {
   final TextEditingController? controller;
   final bool obscureText;
   final TextInputType? keyboardType;
+  final bool showShadow;
 
   const GlassTextField({
     super.key,
@@ -20,6 +21,7 @@ class GlassTextField extends StatefulWidget {
     this.controller,
     this.obscureText = false,
     this.keyboardType,
+    this.showShadow = true,
   });
 
   @override
@@ -65,75 +67,58 @@ class _GlassTextFieldState extends State<GlassTextField>
     return AnimatedBuilder(
       animation: _glowAnim,
       builder: (ctx, _) {
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusMd),
-            boxShadow: [
-              BoxShadow(
-                color: context.sbTheme.accent.withOpacity(0.3 * _glowAnim.value),
-                blurRadius: 20 * _glowAnim.value,
-                spreadRadius: 2 * _glowAnim.value,
+        return LiquidGlassContainer(
+          showShadow: widget.showShadow,
+          borderRadius: LiquidGlassTheme.radiusMd,
+          padding: EdgeInsets.zero,
+          surfaceColor: _focused
+              ? context.sbTheme.accent.withValues(alpha: 0.08)
+              : context.sbTheme.glassSurface,
+          borderColor: _focused
+              ? context.sbTheme.accent.withValues(alpha: 0.6)
+              : context.sbTheme.glassBorder,
+          shadowOverride: _focused ? BoxShadow(
+            color: context.sbTheme.accent.withValues(alpha: 0.3 * _glowAnim.value),
+            blurRadius: 20 * _glowAnim.value,
+            spreadRadius: 2 * _glowAnim.value,
+          ) : null,
+          child: TextField(
+            focusNode: _focus,
+            controller: widget.controller,
+            obscureText: widget.obscureText,
+            keyboardType: widget.keyboardType,
+            style: TextStyle(color: context.sbTheme.textPrimary),
+            decoration: InputDecoration(
+              labelText: widget.label,
+              hintText: widget.hint,
+              labelStyle: TextStyle(
+                color: _focused
+                    ? context.sbTheme.accent
+                    : context.sbTheme.textSecondary,
               ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusMd),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusMd),
-                  color: _focused
-                      ? context.sbTheme.accent.withOpacity(0.08)
-                      : context.sbTheme.glassSurface,
-                  border: Border.all(
-                    color: _focused
-                        ? context.sbTheme.accent.withOpacity(0.6)
-                        : context.sbTheme.glassBorder,
-                    width: _focused ? 1.5 : 1.0,
-                  ),
-                ),
-                child: TextField(
-                  focusNode: _focus,
-                  controller: widget.controller,
-                  obscureText: widget.obscureText,
-                  keyboardType: widget.keyboardType,
-                  style: TextStyle(color: context.sbTheme.textPrimary),
-                  decoration: InputDecoration(
-                    labelText: widget.label,
-                    hintText: widget.hint,
-                    labelStyle: TextStyle(
+              hintStyle: TextStyle(color: context.sbTheme.textTertiary),
+              prefixIcon: widget.prefixIcon != null
+                  ? Icon(
+                      widget.prefixIcon,
                       color: _focused
                           ? context.sbTheme.accent
                           : context.sbTheme.textSecondary,
-                    ),
-                    hintStyle: TextStyle(color: context.sbTheme.textTertiary),
-                    prefixIcon: widget.prefixIcon != null
-                        ? Icon(
-                            widget.prefixIcon,
-                            color: _focused
-                                ? context.sbTheme.accent
-                                : context.sbTheme.textSecondary,
-                            size: 20,
-                          )
-                        : null,
-                    suffixIcon: widget.suffixIcon != null
-                        ? Icon(
-                            widget.suffixIcon,
-                            color: context.sbTheme.textSecondary,
-                            size: 20,
-                          )
-                        : null,
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
-                    ),
-                  ),
-                ),
+                      size: 20,
+                    )
+                  : null,
+              suffixIcon: widget.suffixIcon != null
+                  ? Icon(
+                      widget.suffixIcon,
+                      color: context.sbTheme.textSecondary,
+                      size: 20,
+                    )
+                  : null,
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
               ),
             ),
           ),

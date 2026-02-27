@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'theme/liquid_glass_theme.dart';
-import 'widgets/animated_background.dart';
 import 'screens/gallery_screen.dart';
 
 void main() {
   runApp(const LiquidGlassApp());
 }
 
-enum SandblasterThemeMode { dark, light, ruby, latte }
+enum SandblasterThemeMode { dark, light, ruby, latte, inky }
 
 class ThemeController extends ChangeNotifier {
   SandblasterThemeMode _mode = SandblasterThemeMode.dark;
@@ -66,6 +65,9 @@ class _LiquidGlassAppState extends State<LiquidGlassApp> {
               break;
             case SandblasterThemeMode.latte:
               activeTheme = LiquidGlassTheme.latteTheme;
+              break;
+            case SandblasterThemeMode.inky:
+              activeTheme = LiquidGlassTheme.inkyTheme;
               break;
             default:
               activeTheme = LiquidGlassTheme.darkTheme;

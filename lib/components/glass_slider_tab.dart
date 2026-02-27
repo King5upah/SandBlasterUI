@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/liquid_glass_theme.dart';
+import '../widgets/liquid_glass_container.dart';
 
 class GlassSlider extends StatefulWidget {
   final double value;
@@ -23,9 +24,7 @@ class GlassSlider extends StatefulWidget {
 
 class _GlassSliderState extends State<GlassSlider>
     with SingleTickerProviderStateMixin {
-  bool _dragging = false;
   late AnimationController _pulseController;
-  late Animation<double> _pulseAnim;
 
   @override
   void initState() {
@@ -33,9 +32,6 @@ class _GlassSliderState extends State<GlassSlider>
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
-    );
-    _pulseAnim = Tween<double>(begin: 1.0, end: 1.3).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
   }
 
@@ -50,31 +46,41 @@ class _GlassSliderState extends State<GlassSlider>
     final color = widget.activeColor ?? context.sbTheme.accent;
     final t = (widget.value - widget.min) / (widget.max - widget.min);
 
-    return SliderTheme(
-      data: SliderThemeData(
-        trackHeight: 6,
-        activeTrackColor: color,
-        inactiveTrackColor: Colors.white.withOpacity(0.1),
-        thumbColor: Colors.transparent,
-        overlayColor: color.withOpacity(0.1),
-        thumbShape: _GlassThumbShape(color: color),
-        overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
-        trackShape: _GlassTrackShape(color: color, progress: t),
-      ),
-      child: Slider(
-        value: widget.value,
-        min: widget.min,
-        max: widget.max,
+    return Semantics(
+      slider: true,
+      value: widget.value.toStringAsFixed(2),
+      onIncrease: () {
+        final next = (widget.value + 0.1).clamp(widget.min, widget.max);
+        if (next != widget.value) widget.onChanged(next);
+      },
+      onDecrease: () {
+        final next = (widget.value - 0.1).clamp(widget.min, widget.max);
+        if (next != widget.value) widget.onChanged(next);
+      },
+      child: SliderTheme(
+        data: SliderThemeData(
+          trackHeight: 6,
+          activeTrackColor: color,
+          inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
+          thumbColor: Colors.transparent,
+          overlayColor: color.withValues(alpha: 0.1),
+          thumbShape: _GlassThumbShape(color: color),
+          overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
+          trackShape: _GlassTrackShape(color: color, progress: t),
+        ),
+        child: Slider(
+          value: widget.value,
+          min: widget.min,
+          max: widget.max,
         onChangeStart: (_) {
-          setState(() => _dragging = true);
           _pulseController.repeat(reverse: true);
         },
-        onChangeEnd: (_) {
-          setState(() => _dragging = false);
-          _pulseController.stop();
-          _pulseController.reset();
-        },
-        onChanged: widget.onChanged,
+          onChangeEnd: (_) {
+            _pulseController.stop();
+            _pulseController.reset();
+          },
+          onChanged: widget.onChanged,
+        ),
       ),
     );
   }
@@ -106,7 +112,7 @@ class _GlassThumbShape extends SliderComponentShape {
       center,
       16,
       Paint()
-        ..color = color.withOpacity(0.2)
+        ..color = color.withValues(alpha: 0.2)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
     );
 
@@ -115,7 +121,7 @@ class _GlassThumbShape extends SliderComponentShape {
       center,
       12,
       Paint()
-        ..color = color.withOpacity(0.3)
+        ..color = color.withValues(alpha: 0.3)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.5,
     );
@@ -126,7 +132,7 @@ class _GlassThumbShape extends SliderComponentShape {
       10,
       Paint()
         ..shader = RadialGradient(
-          colors: [color, color.withOpacity(0.6)],
+          colors: [color, color.withValues(alpha: 0.6)],
         ).createShader(Rect.fromCircle(center: center, radius: 10)),
     );
 
@@ -134,7 +140,7 @@ class _GlassThumbShape extends SliderComponentShape {
     canvas.drawCircle(
       center + const Offset(-3, -3),
       3,
-      Paint()..color = Colors.white.withOpacity(0.5),
+      Paint()..color = Colors.white.withValues(alpha: 0.5),
     );
   }
 }
@@ -167,7 +173,7 @@ class _GlassTrackShape extends RoundedRectSliderTrackShape {
     // Inactive track
     canvas.drawRRect(
       rrect,
-      Paint()..color = Colors.white.withOpacity(0.1),
+      Paint()..color = Colors.white.withValues(alpha: 0.1),
     );
 
     // Active track with gradient
@@ -182,7 +188,7 @@ class _GlassTrackShape extends RoundedRectSliderTrackShape {
       activeRect,
       Paint()
         ..shader = LinearGradient(
-          colors: [color.withOpacity(0.6), color],
+          colors: [color.withValues(alpha: 0.6), color],
         ).createShader(trackRect),
     );
 
@@ -190,7 +196,7 @@ class _GlassTrackShape extends RoundedRectSliderTrackShape {
     canvas.drawRRect(
       activeRect,
       Paint()
-        ..color = color.withOpacity(0.3)
+        ..color = color.withValues(alpha: 0.3)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
     );
   }
@@ -201,6 +207,7 @@ class GlassTabBar extends StatefulWidget {
   final int selectedIndex;
   final ValueChanged<int> onChanged;
   final Color? activeColor;
+  final bool showShadow;
 
   const GlassTabBar({
     super.key,
@@ -208,6 +215,7 @@ class GlassTabBar extends StatefulWidget {
     required this.selectedIndex,
     required this.onChanged,
     this.activeColor,
+    this.showShadow = true,
   });
 
   @override
@@ -219,20 +227,22 @@ class _GlassTabBarState extends State<GlassTabBar> {
   Widget build(BuildContext context) {
     final color = widget.activeColor ?? context.sbTheme.accent;
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusPill),
-        color: Colors.white.withOpacity(0.05),
-        border: Border.all(color: context.sbTheme.glassBorder),
-      ),
+    return LiquidGlassContainer(
+      showShadow: widget.showShadow,
+      borderRadius: LiquidGlassTheme.radiusPill,
       padding: const EdgeInsets.all(4),
+      surfaceColor: Colors.white.withValues(alpha: 0.05),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: widget.tabs.asMap().entries.map((e) {
           final isSelected = e.key == widget.selectedIndex;
-          return GestureDetector(
-            onTap: () => widget.onChanged(e.key),
-            child: MouseRegion(
+          return Semantics(
+            button: true,
+            selected: isSelected,
+            label: e.value,
+            child: GestureDetector(
+              onTap: () => widget.onChanged(e.key),
+              child: MouseRegion(
               cursor: SystemMouseCursors.click,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
@@ -240,20 +250,18 @@ class _GlassTabBarState extends State<GlassTabBar> {
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusPill),
-                  color: isSelected ? color.withOpacity(0.2) : Colors.transparent,
+                  color: isSelected ? color.withValues(alpha: 0.2) : Colors.transparent,
                   border: isSelected
-                      ? Border.all(color: color.withOpacity(0.4), width: 1)
-                      : null,
-                  boxShadow: isSelected
-                      ? [BoxShadow(color: color.withOpacity(0.2), blurRadius: 12)]
-                      : null,
+                      ? Border.all(color: color.withValues(alpha: 0.4), width: 1)
+                      : Border.all(color: Colors.transparent, width: 1),
                 ),
                 child: Text(
                   e.value,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: isSelected ? color : context.sbTheme.textSecondary,
-                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                      ),
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: isSelected ? color : context.sbTheme.textSecondary,
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                        ),
+                  ),
                 ),
               ),
             ),

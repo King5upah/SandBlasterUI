@@ -8,12 +8,14 @@ class GlassModal extends StatelessWidget {
   final String title;
   final Widget body;
   final List<({String label, Color? color, VoidCallback onTap})>? actions;
+  final bool showShadow;
 
   const GlassModal({
     super.key,
     required this.title,
     required this.body,
     this.actions,
+    this.showShadow = true,
   });
 
   static Future<void> show(
@@ -21,17 +23,19 @@ class GlassModal extends StatelessWidget {
     required String title,
     required Widget body,
     List<({String label, Color? color, VoidCallback onTap})>? actions,
+    bool showShadow = true,
   }) {
     return showGeneralDialog(
       context: context,
       barrierDismissible: true,
       barrierLabel: 'dismiss',
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       transitionDuration: const Duration(milliseconds: 400),
       pageBuilder: (_, __, ___) => GlassModal(
         title: title,
         body: body,
         actions: actions,
+        showShadow: showShadow,
       ),
       transitionBuilder: (ctx, anim, _, child) {
         final curve = CurvedAnimation(parent: anim, curve: Curves.easeOutCubic);
@@ -62,6 +66,7 @@ class GlassModal extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: LiquidGlassContainer(
+              showShadow: showShadow,
               borderRadius: LiquidGlassTheme.radiusXl,
               blur: LiquidGlassTheme.blurHeavy,
               surfaceColor: context.sbTheme.glassElevated,
@@ -127,6 +132,7 @@ class GlassToast {
     IconData icon = Icons.check_circle_rounded,
     Color? color,
     Duration duration = const Duration(seconds: 3),
+    bool showShadow = true,
   }) {
     color ??= context.sbTheme.success;
     _entry?.remove();
@@ -143,6 +149,7 @@ class GlassToast {
         icon: icon,
         color: color!,
         controller: controller,
+        showShadow: showShadow,
       ),
     );
 
@@ -164,12 +171,14 @@ class _GlassToastWidget extends StatelessWidget {
   final IconData icon;
   final Color color;
   final AnimationController controller;
+  final bool showShadow;
 
   const _GlassToastWidget({
     required this.message,
     required this.icon,
     required this.color,
     required this.controller,
+    this.showShadow = true,
   });
 
   @override
@@ -190,43 +199,26 @@ class _GlassToastWidget extends StatelessWidget {
               ).animate(curve),
               child: FadeTransition(
                 opacity: controller,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusPill),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 14),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusPill),
-                        color: color.withOpacity(0.15),
-                        border: Border.all(
-                          color: color.withOpacity(0.4),
-                          width: 1,
+                child: LiquidGlassContainer(
+                  showShadow: showShadow,
+                  borderRadius: LiquidGlassTheme.radiusPill,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  surfaceColor: color.withValues(alpha: 0.15),
+                  borderColor: color.withValues(alpha: 0.4),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(icon, color: color, size: 20),
+                      const SizedBox(width: 10),
+                      Text(
+                        message,
+                        style: TextStyle(
+                          color: context.sbTheme.textPrimary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: color.withOpacity(0.25),
-                            blurRadius: 20,
-                          )
-                        ],
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(icon, color: color, size: 20),
-                          const SizedBox(width: 10),
-                          Text(
-                            message,
-                            style: TextStyle(
-                              color: context.sbTheme.textPrimary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    ],
                   ),
                 ),
               ),

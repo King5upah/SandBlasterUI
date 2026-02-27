@@ -4,7 +4,7 @@ import '../theme/liquid_glass_theme.dart';
 
 class GlassNavbar extends StatelessWidget {
   final String title;
-  final List<_NavItem> items;
+  final List<NavItem> items;
   final int selectedIndex;
   final ValueChanged<int> onItemSelected;
   final List<Widget>? actions;
@@ -72,7 +72,7 @@ class GlassNavbar extends StatelessWidget {
 }
 
 class _NavPill extends StatefulWidget {
-  final _NavItem item;
+  final NavItem item;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -104,13 +104,13 @@ class _NavPillState extends State<_NavPill> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusPill),
             color: widget.isSelected
-                ? context.sbTheme.accent.withOpacity(0.2)
+                ? context.sbTheme.accent.withValues(alpha: 0.2)
                 : _hovered
-                    ? Colors.white.withOpacity(0.08)
+                    ? Colors.white.withValues(alpha: 0.08)
                     : Colors.transparent,
             border: Border.all(
               color: widget.isSelected
-                  ? context.sbTheme.accent.withOpacity(0.5)
+                  ? context.sbTheme.accent.withValues(alpha: 0.5)
                   : Colors.transparent,
               width: 1,
             ),
@@ -145,12 +145,12 @@ class _NavPillState extends State<_NavPill> {
   }
 }
 
-class _NavItem {
+class NavItem {
   final String label;
   final IconData icon;
-  const _NavItem(this.label, this.icon);
+  const NavItem(this.label, this.icon);
 }
 
-List<_NavItem> navItems(List<({String label, IconData icon})> data) {
-  return data.map((d) => _NavItem(d.label, d.icon)).toList();
+List<NavItem> navItems(List<({String label, IconData icon})> data) {
+  return data.map((d) => NavItem(d.label, d.icon)).toList();
 }

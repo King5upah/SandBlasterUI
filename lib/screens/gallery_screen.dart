@@ -7,6 +7,8 @@ import '../../components/glass_text_field.dart';
 import '../../components/glass_toggle_chip.dart';
 import '../../components/glass_slider_tab.dart';
 import '../../components/glass_modal_toast.dart';
+import '../../components/glass_checkbox_radio.dart';
+import '../../components/glass_dropdown.dart';
 import '../widgets/animated_background.dart';
 import '../../main.dart';
 import 'dart:ui';
@@ -115,7 +117,7 @@ class _Sidebar extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
           decoration: BoxDecoration(
-            color: Color(0x12FFFFFF),
+            color: const Color(0x12FFFFFF),
             border: Border(
               right: BorderSide(color: context.sbTheme.glassBorder, width: 1),
             ),
@@ -139,7 +141,7 @@ class _Sidebar extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: context.sbTheme.accent.withOpacity(0.4),
+                            color: context.sbTheme.accent.withValues(alpha: 0.4),
                             blurRadius: 12,
                           )
                         ],
@@ -254,13 +256,13 @@ class _SidebarItemState extends State<_SidebarItem> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusSm),
             color: widget.isSelected
-                ? context.sbTheme.accent.withOpacity(0.15)
+                ? context.sbTheme.accent.withValues(alpha: 0.15)
                 : _hovered
-                    ? Colors.white.withOpacity(0.06)
+                    ? Colors.white.withValues(alpha: 0.06)
                     : Colors.transparent,
             border: Border.all(
               color: widget.isSelected
-                  ? context.sbTheme.accent.withOpacity(0.3)
+                  ? context.sbTheme.accent.withValues(alpha: 0.3)
                   : Colors.transparent,
               width: 1,
             ),
@@ -327,7 +329,7 @@ class _Header extends StatelessWidget {
         child: Container(
           height: 64,
           decoration: BoxDecoration(
-            color: Color(0x0FFFFFFF),
+            color: const Color(0x0FFFFFFF),
             border: Border(
               bottom: BorderSide(color: context.sbTheme.glassBorder),
             ),
@@ -350,8 +352,8 @@ class _Header extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: context.sbTheme.success.withOpacity(0.15),
-                  border: Border.all(color: context.sbTheme.success.withOpacity(0.4)),
+                  color: context.sbTheme.success.withValues(alpha: 0.15),
+                  border: Border.all(color: context.sbTheme.success.withValues(alpha: 0.4)),
                 ),
                 child: Row(
                   children: [
@@ -394,7 +396,7 @@ class _Header extends StatelessWidget {
                 },
               ),
               const SizedBox(width: 8),
-              GlassButton(
+              const GlassButton(
                 icon: Icons.code_rounded,
                 variant: GlassButtonVariant.icon,
               ),
@@ -429,6 +431,12 @@ class _SectionViewState extends State<_SectionView> {
   double _sliderVal2 = 0.3;
   int _tabIndex = 0;
   final _textCtrl = TextEditingController();
+  
+  // New input states
+  int _radioVal = 1;
+  bool _check1 = false;
+  bool _check2 = true;
+  String _dropdownVal = 'option1';
 
   final _tabs = ['Design', 'Components', 'Motion', 'Colors'];
 
@@ -450,7 +458,7 @@ class _SectionViewState extends State<_SectionView> {
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusLg),
-        color: bg ?? Colors.white.withOpacity(0.03),
+        color: bg ?? Colors.white.withValues(alpha: 0.03),
         border: Border.all(color: context.sbTheme.glassBorder),
       ),
       child: child,
@@ -532,7 +540,7 @@ class _SectionViewState extends State<_SectionView> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: context.sbTheme.accent.withOpacity(0.5),
+                          color: context.sbTheme.accent.withValues(alpha: 0.5),
                           blurRadius: 20,
                         )
                       ],
@@ -827,40 +835,113 @@ class _SectionViewState extends State<_SectionView> {
 
   Widget _buildInputs() {
     return _buildSection(
-      'Text Fields',
-      'Glass-frosted inputs with animated focus glow rings.',
-      _demoBox(
-        child: Column(
-          children: [
-            GlassTextField(
-              label: 'Email address',
-              hint: 'you@example.com',
-              prefixIcon: Icons.email_rounded,
-              suffixIcon: Icons.check_circle_rounded,
-              controller: _textCtrl,
+      'Form Inputs',
+      'Glass-frosted text fields, dropdowns, checkboxes, and radio buttons.',
+      Column(
+        children: [
+          _demoBox(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Text Fields', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 16),
+                GlassTextField(
+                  label: 'Email address',
+                  hint: 'you@example.com',
+                  prefixIcon: Icons.email_rounded,
+                  suffixIcon: Icons.check_circle_rounded,
+                  controller: _textCtrl,
+                ),
+                const SizedBox(height: 16),
+                const GlassTextField(
+                  label: 'Password',
+                  hint: '••••••••',
+                  prefixIcon: Icons.lock_rounded,
+                  suffixIcon: Icons.visibility_rounded,
+                  obscureText: true,
+                ),
+                const SizedBox(height: 16),
+                const GlassTextField(
+                  label: 'Search',
+                  hint: 'Search components...',
+                  prefixIcon: Icons.search_rounded,
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            GlassTextField(
-              label: 'Password',
-              hint: '••••••••',
-              prefixIcon: Icons.lock_rounded,
-              suffixIcon: Icons.visibility_rounded,
-              obscureText: true,
+          ),
+          const SizedBox(height: 16),
+          _demoBox(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Dropdown', style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 16),
+                      GlassDropdown<String>(
+                        value: _dropdownVal,
+                        items: const [
+                          DropdownMenuItem(value: 'option1', child: Text('Design System')),
+                          DropdownMenuItem(value: 'option2', child: Text('Components')),
+                          DropdownMenuItem(value: 'option3', child: Text('Motion & Physics')),
+                        ],
+                        onChanged: (v) => setState(() => _dropdownVal = v ?? 'option1'),
+                        hint: 'Select an option',
+                        prefixIcon: Icons.layers_rounded,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 32),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Checkbox & Radio', style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 16),
+                      GlassCheckbox(
+                        value: _check1,
+                        label: 'Enable fluid motion physics',
+                        onChanged: (v) => setState(() => _check1 = v),
+                      ),
+                      const SizedBox(height: 8),
+                      GlassCheckbox(
+                        value: _check2,
+                        label: 'Use volumetric glass shadows',
+                        onChanged: (v) => setState(() => _check2 = v),
+                        activeColor: context.sbTheme.orbCyan,
+                      ),
+                      const SizedBox(height: 16),
+                      Wrap(
+                        spacing: 16,
+                        runSpacing: 12,
+                        children: [
+                          GlassRadio<int>(
+                            value: 1,
+                            groupValue: _radioVal,
+                            onChanged: (v) => setState(() => _radioVal = v),
+                            label: 'Light Blur',
+                          ),
+                          GlassRadio<int>(
+                            value: 2,
+                            groupValue: _radioVal,
+                            onChanged: (v) => setState(() => _radioVal = v),
+                            label: 'Heavy Blur',
+                            activeColor: context.sbTheme.orbPink,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            GlassTextField(
-              label: 'Search',
-              hint: 'Search components...',
-              prefixIcon: Icons.search_rounded,
-            ),
-            const SizedBox(height: 16),
-            GlassTextField(
-              label: 'Username',
-              hint: '@username',
-              prefixIcon: Icons.person_rounded,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -918,7 +999,7 @@ class _SectionViewState extends State<_SectionView> {
                     GlassChip(label: 'Design', color: context.sbTheme.accentViolet, icon: Icons.design_services_rounded),
                     GlassChip(label: 'Outlined', outlined: true, color: context.sbTheme.orbCyan),
                     GlassChip(label: 'Outlined', outlined: true, color: context.sbTheme.orbPink),
-                    GlassChip(label: 'Glass', outlined: true, color: Colors.white),
+                    const GlassChip(label: 'Glass', outlined: true, color: Colors.white),
                   ],
                 ),
               ],
@@ -980,7 +1061,7 @@ class _SectionViewState extends State<_SectionView> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusMd),
-                      color: Colors.white.withOpacity(0.04),
+                      color: Colors.white.withValues(alpha: 0.04),
                       border: Border.all(color: context.sbTheme.glassBorder),
                     ),
                     child: Text(
@@ -1008,7 +1089,7 @@ class _SectionViewState extends State<_SectionView> {
         'AnimationController with repeat/reverse creates breathing effects. '
         'Flutter Animate adds stagger and entry animations.',
     'The palette uses deep navy/indigo backgrounds with iridescent accent tones. '
-        'Colored glass is achieved via color.withOpacity() over BackdropFilter, '
+        'Colored glass is achieved via color.withValues(alpha: ) over BackdropFilter, '
         'letting background content tint the surface.',
   ];
 
@@ -1145,17 +1226,17 @@ class _SectionViewState extends State<_SectionView> {
             spacing: 16,
             runSpacing: 16,
             children: [
-              _SurfaceSample(
+              const _SurfaceSample(
                 label: 'Light (8px)',
                 blur: LiquidGlassTheme.blurLight,
                 opacity: 0.10,
               ),
-              _SurfaceSample(
+              const _SurfaceSample(
                 label: 'Medium (20px)',
                 blur: LiquidGlassTheme.blurMedium,
                 opacity: 0.18,
               ),
-              _SurfaceSample(
+              const _SurfaceSample(
                 label: 'Heavy (40px)',
                 blur: LiquidGlassTheme.blurHeavy,
                 opacity: 0.28,
@@ -1164,19 +1245,19 @@ class _SectionViewState extends State<_SectionView> {
                 label: 'Tinted Blue',
                 blur: LiquidGlassTheme.blurMedium,
                 opacity: 0.18,
-                tint: context.sbTheme.accent.withOpacity(0.15),
+                tint: context.sbTheme.accent.withValues(alpha: 0.15),
               ),
               _SurfaceSample(
                 label: 'Tinted Violet',
                 blur: LiquidGlassTheme.blurMedium,
                 opacity: 0.18,
-                tint: context.sbTheme.accentViolet.withOpacity(0.15),
+                tint: context.sbTheme.accentViolet.withValues(alpha: 0.15),
               ),
               _SurfaceSample(
                 label: 'Tinted Cyan',
                 blur: LiquidGlassTheme.blurMedium,
                 opacity: 0.18,
-                tint: context.sbTheme.orbCyan.withOpacity(0.15),
+                tint: context.sbTheme.orbCyan.withValues(alpha: 0.15),
               ),
             ],
           ),
@@ -1188,7 +1269,7 @@ class _SectionViewState extends State<_SectionView> {
               spacing: 12,
               runSpacing: 12,
               children: [
-                _TokenCard(name: 'bgDeep', value: '#050814', color: const Color(0xFF050814)),
+                const _TokenCard(name: 'bgDeep', value: '#050814', color: Color(0xFF050814)),
                 _TokenCard(name: 'accent', value: '#60A5FA', color: context.sbTheme.accent),
                 _TokenCard(name: 'accentViolet', value: '#A78BFA', color: context.sbTheme.accentViolet),
                 _TokenCard(name: 'success', value: '#34D399', color: context.sbTheme.success),
@@ -1277,8 +1358,8 @@ class _PrincipleCard extends StatelessWidget {
             height: 44,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: color.withOpacity(0.15),
-              border: Border.all(color: color.withOpacity(0.3)),
+              color: color.withValues(alpha: 0.15),
+              border: Border.all(color: color.withValues(alpha: 0.3)),
             ),
             child: Icon(icon, color: color, size: 22),
           ),
@@ -1314,7 +1395,7 @@ class _MetricRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
             ),
             child: Text(
               value,
@@ -1426,7 +1507,7 @@ class _SurfaceSample extends StatelessWidget {
       width: 180,
       height: 120,
       blur: blur,
-      surfaceColor: tint ?? Colors.white.withOpacity(opacity),
+      surfaceColor: tint ?? Colors.white.withValues(alpha: opacity),
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1467,7 +1548,7 @@ class _TokenCard extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(LiquidGlassTheme.radiusMd),
-        color: Colors.white.withOpacity(0.04),
+        color: Colors.white.withValues(alpha: 0.04),
         border: Border.all(color: context.sbTheme.glassBorder),
       ),
       child: Column(
@@ -1479,7 +1560,7 @@ class _TokenCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: color,
-              boxShadow: [BoxShadow(color: color.withOpacity(0.4), blurRadius: 8)],
+              boxShadow: [BoxShadow(color: color.withValues(alpha: 0.4), blurRadius: 8)],
             ),
           ),
           const SizedBox(height: 8),

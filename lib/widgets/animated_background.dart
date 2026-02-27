@@ -17,18 +17,24 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
   late List<Animation<double>> _yAnims;
   final _rand = math.Random(42);
 
-  List<_OrbConfig> get _orbs => [
-    _OrbConfig(color: context.sbTheme.orbViolet, size: 480, opacity: 0.35),
-    _OrbConfig(color: context.sbTheme.orbBlue, size: 380, opacity: 0.30),
-    _OrbConfig(color: context.sbTheme.orbCyan, size: 320, opacity: 0.25),
-    _OrbConfig(color: context.sbTheme.orbPink, size: 280, opacity: 0.20),
-    _OrbConfig(color: context.sbTheme.orbEmerald, size: 240, opacity: 0.18),
-  ];
+  late List<_OrbConfig> _orbs;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _orbs = [
+      _OrbConfig(color: context.sbTheme.orbViolet, size: 480, opacity: 0.35),
+      _OrbConfig(color: context.sbTheme.orbBlue, size: 380, opacity: 0.30),
+      _OrbConfig(color: context.sbTheme.orbCyan, size: 320, opacity: 0.25),
+      _OrbConfig(color: context.sbTheme.orbPink, size: 280, opacity: 0.20),
+      _OrbConfig(color: context.sbTheme.orbEmerald, size: 240, opacity: 0.18),
+    ];
+  }
 
   @override
   void initState() {
     super.initState();
-    final orbCount = 5;
+    const orbCount = 5;
     _controllers = List.generate(orbCount, (i) {
       return AnimationController(
         vsync: this,
@@ -65,44 +71,56 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Base gradient
         Positioned.fill(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: RadialGradient(
-                center: const Alignment(-0.3, -0.5),
-                radius: 1.5,
-                colors: [
-                  context.sbTheme.bgHighlight,
-                  context.sbTheme.bgDeep,
-                ],
-              ),
+          child: RepaintBoundary(
+            child: Stack(
+              children: [
+                // Base gradient
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: RadialGradient(
+                        center: const Alignment(-0.3, -0.5),
+                        radius: 1.5,
+                        colors: [
+                          context.sbTheme.bgHighlight,
+                          context.sbTheme.bgDeep,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                // Orbs — use FractionallySizedBox + Transform to avoid Positioned-inside-LayoutBuilder
+                ...List.generate(_orbs.length, (i) {
+                  return AnimatedBuilder(
+                    animation: _controllers[i],
+                    builder: (ctx, _) {
+                      return Positioned.fill(
+                        child: CustomPaint(
+                          painter: _OrbPainter(
+                            config: _orbs[i],
+                            xFraction: _xAnims[i].value,
+                            yFraction: _yAnims[i].value,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }),
+                // Grain overlay
+                Positioned.fill(
+                  child: CustomPaint(painter: _GrainPainter()),
+                ),
+              ],
             ),
           ),
         ),
-        // Orbs — use FractionallySizedBox + Transform to avoid Positioned-inside-LayoutBuilder
-        ...List.generate(_orbs.length, (i) {
-          return AnimatedBuilder(
-            animation: _controllers[i],
-            builder: (ctx, _) {
-              return Positioned.fill(
-                child: CustomPaint(
-                  painter: _OrbPainter(
-                    config: _orbs[i],
-                    xFraction: _xAnims[i].value,
-                    yFraction: _yAnims[i].value,
-                  ),
-                ),
-              );
-            },
-          );
-        }),
-        // Grain overlay
-        Positioned.fill(
-          child: CustomPaint(painter: _GrainPainter()),
-        ),
         // Content
-        Positioned.fill(child: widget.child),
+        Positioned.fill(
+          child: RepaintBoundary(
+            child: widget.child,
+          ),
+        ),
       ],
     );
   }
